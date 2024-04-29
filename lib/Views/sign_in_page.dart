@@ -107,7 +107,7 @@ class _SignInPageState extends State<SignInPage> {
                   padding:  EdgeInsets.only(left: width/12, top:height/7.54),
                   child: InkWell(
                     onTap: (){
-                      Navigator.of(context).pushReplacement(
+                      Navigator.of(context).push(
                           MaterialPageRoute(builder: (context) =>LoginPage()));
                     },
                     child: Container(
@@ -136,7 +136,7 @@ class _SignInPageState extends State<SignInPage> {
                   padding:  EdgeInsets.only(left: width/12, top:height/4.71),
                   child: InkWell(
                     onTap: (){
-                      Navigator.of(context).pushReplacement(
+                      Navigator.of(context).push(
                           MaterialPageRoute(builder: (context) =>RegisterScreen()));
                     },
                     child: Container(

@@ -13,7 +13,7 @@ class ProductDetails extends StatefulWidget {
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
-  int counter = 0;
+  int counter = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -205,34 +205,57 @@ class _ProductDetailsState extends State<ProductDetails> {
             Padding(
               padding: EdgeInsets.only(left: width / 2, top: height / 37.7),
               child: InkWell(
-                onTap: () {
-
-                },
-                child: Container(
-                  height: height / 18.85,
-                  width: width / 2.4,
-                  decoration: BoxDecoration(
-                      color: primaryColor,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Padding(
-                    padding: EdgeInsets.only(left: width / 24),
-                    child: Row(
-                      children: [
-                        Text(
-                          "Add to Cart",
-                          style: GoogleFonts.sofiaSans(
-                              fontSize: 16,
-                              color: textColor,
-                              fontWeight: FontWeight.w800),
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.shopping_cart_outlined,
-                            color: textColor,
+                onTap: () {},
+                child: InkWell(
+                  onTap: () {
+                    showSnackBar(context);
+                    // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    //
+                    //   width: MediaQuery.of(context).size.width * 0.46,
+                    //   elevation: 5.0,
+                    //   backgroundColor: primaryColor.withOpacity(.3),
+                    //   behavior: SnackBarBehavior.floating,
+                    //   shape: RoundedRectangleBorder(
+                    //       borderRadius: BorderRadius.circular(15.0)),
+                    //   content: Wrap(
+                    //     children: [
+                    //       Container(
+                    //         //height: 20,
+                    //
+                    //         child: Text(
+                    //           'Successfully Add to Cart',
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ));
+                  },
+                  child: Container(
+                    height: height / 18.85,
+                    width: width / 2.4,
+                    decoration: BoxDecoration(
+                        color: primaryColor,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Padding(
+                      padding: EdgeInsets.only(left: width / 24),
+                      child: Row(
+                        children: [
+                          Text(
+                            "Add to Cart",
+                            style: GoogleFonts.sofiaSans(
+                                fontSize: 16,
+                                color: textColor,
+                                fontWeight: FontWeight.w800),
                           ),
-                        ),
-                      ],
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.shopping_cart_outlined,
+                              color: textColor,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -242,5 +265,19 @@ class _ProductDetailsState extends State<ProductDetails> {
         ),
       ),
     );
+  }
+
+  void showSnackBar(BuildContext context) {
+    final snackBar = SnackBar(
+      content: Text('Successfully add to cart'),
+      backgroundColor: primaryColor,
+      behavior: SnackBarBehavior.floating,
+      width: 200,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30),
+      ),
+      duration: Duration(milliseconds: 1000),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

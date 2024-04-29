@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_church_management/Views/otp_page.dart';
 import 'package:flutter_church_management/Views/register_screen.dart';
 import 'package:flutter_church_management/Views/sign_in_page.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -51,16 +52,21 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                Container(
-                  width: width / 1.2,
-                  child: TextField(
-                    readOnly: true,
-                    decoration: InputDecoration(
-
-                        //   border: OutlineInputBorder(),
-                        hintText: 'Kindly enter your login details',
-                        hintStyle: GoogleFonts.sofiaSans(
-                            color: Color(0xff262626).withOpacity(.3))),
+                Padding(
+                  padding: const EdgeInsets.only(right: 90),
+                  child: Text(
+                    'Kindly enter your login details',
+                    style: GoogleFonts.sofiaSans(
+                      color: TextColor.withOpacity(.6),
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                  width: 300,
+                  child: Divider(
+                    color: Colors.grey,
                   ),
                 ),
                 Padding(
@@ -81,14 +87,14 @@ class _LoginPageState extends State<LoginPage> {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       color: textColor,
-                      border: Border.all(color: primaryColor)),
+                      border: Border.all(color: Colors.grey.withOpacity(.3))),
                   child: TextField(
                     keyboardType: TextInputType.phone,
                     maxLength: 10,
                     decoration: InputDecoration(
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.only(
-                            top: height / 12.56, bottom: width / 251.33),
+                            top: height / 37.7, bottom: width / 251.33),
                         hintText: 'Kindly enter your phone number',
                         counter: SizedBox(),
                         prefixIcon: IconButton(
@@ -97,6 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                             padding: EdgeInsets.only(top: height / 75.4),
                             child: Icon(
                               Icons.phone,
+                              size: 20,
                               color: TextColor.withOpacity(.3),
                             ),
                           ),
@@ -110,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: InkWell(
                     onTap: () {
                       Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context) => HomePage()));
+                          MaterialPageRoute(builder: (context) => OtpPage()));
                     },
                     child: Container(
                       height: height / 18.85,

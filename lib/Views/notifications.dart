@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_church_management/Views/home_page.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:rive/rive.dart';
 
 import '../constant.dart';
 
@@ -18,10 +19,9 @@ class _NotificationsState extends State<Notifications> {
     double width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-        backgroundColor: Color(0xffFFFFFF),
-        body: SingleChildScrollView(
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+      backgroundColor: Color(0xffFFFFFF),
+      body: SingleChildScrollView(
+        child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
           Container(
             height: height / 7.54,
             decoration: BoxDecoration(
@@ -54,11 +54,20 @@ class _NotificationsState extends State<Notifications> {
                         fontSize: 20,
                         color: textColor,
                         fontWeight: FontWeight.w800),
-                  )
+                  ),
                 ],
               ),
             ),
           ),
-        ])));
+          Container(
+            height: 300,
+            child: RiveAnimation.asset(
+              'assets/fonts/no_data.riv',
+              fit: BoxFit.contain,
+            ),
+          ),
+        ]),
+      ),
+    );
   }
 }

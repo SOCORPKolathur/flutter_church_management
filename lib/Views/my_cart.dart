@@ -12,7 +12,7 @@ class MyCart extends StatefulWidget {
 }
 
 class _MyCartState extends State<MyCart> {
-  int counter = 0;
+  int counter = 1;
 
   @override
   Widget build(BuildContext context) {

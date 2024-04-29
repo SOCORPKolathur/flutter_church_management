@@ -31,6 +31,170 @@ class _SocialMediaState extends State<SocialMedia> {
               fontSize: 20, color: textColor, fontWeight: FontWeight.w800),
         ),
       ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 20, top: 20),
+            child: Container(
+              height: 70,
+              width: 320,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.grey.withOpacity(.3))),
+              child: ListTile(
+                leading: Padding(
+                  padding: const EdgeInsets.only(top: 0),
+                  child:
+                      Container(width: 60, child: Image.asset("assets/fb.png")),
+                ),
+                title: Text(
+                  "Facebook",
+                  style: GoogleFonts.sofiaSans(
+                      fontSize: 16,
+                      color: TextColor,
+                      fontWeight: FontWeight.w800),
+                ),
+                subtitle: Text(
+                  "IKIA Church",
+                  style: GoogleFonts.sofiaSans(
+                      fontSize: 16,
+                      color: TextColor.withOpacity(.4),
+                      fontWeight: FontWeight.w800),
+                ),
+                trailing: Icon(Icons.arrow_forward_ios),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 20, top: 20),
+            child: Container(
+              height: 70,
+              width: 320,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.grey.withOpacity(.3))),
+              child: ListTile(
+                leading: Padding(
+                  padding: const EdgeInsets.only(top: 0),
+                  child: Container(
+                      width: 60, child: Image.asset("assets/instagram.png")),
+                ),
+                title: Text(
+                  "Instagram",
+                  style: GoogleFonts.sofiaSans(
+                      fontSize: 16,
+                      color: TextColor,
+                      fontWeight: FontWeight.w800),
+                ),
+                subtitle: Text(
+                  "@ikia_church",
+                  style: GoogleFonts.sofiaSans(
+                      fontSize: 16,
+                      color: TextColor.withOpacity(.4),
+                      fontWeight: FontWeight.w800),
+                ),
+                trailing: Icon(Icons.arrow_forward_ios),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 20, top: 20),
+            child: Container(
+              height: 70,
+              width: 320,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.grey.withOpacity(.3))),
+              child: ListTile(
+                leading: Padding(
+                  padding: const EdgeInsets.only(top: 0),
+                  child: Container(
+                      width: 60, child: Image.asset("assets/twitter.png")),
+                ),
+                title: Text(
+                  "Twitter",
+                  style: GoogleFonts.sofiaSans(
+                      fontSize: 16,
+                      color: TextColor,
+                      fontWeight: FontWeight.w800),
+                ),
+                subtitle: Text(
+                  "@ikiachurch_offl",
+                  style: GoogleFonts.sofiaSans(
+                      fontSize: 16,
+                      color: TextColor.withOpacity(.4),
+                      fontWeight: FontWeight.w800),
+                ),
+                trailing: Icon(Icons.arrow_forward_ios),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 20, top: 20),
+            child: Container(
+              height: 70,
+              width: 320,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.grey.withOpacity(.3))),
+              child: ListTile(
+                leading: Padding(
+                  padding: const EdgeInsets.only(top: 0),
+                  child: Container(
+                      width: 60, child: Image.asset("assets/youtube.png")),
+                ),
+                title: Text(
+                  "YouTube",
+                  style: GoogleFonts.sofiaSans(
+                      fontSize: 16,
+                      color: TextColor,
+                      fontWeight: FontWeight.w800),
+                ),
+                subtitle: Text(
+                  "@IKIA Videos",
+                  style: GoogleFonts.sofiaSans(
+                      fontSize: 16,
+                      color: TextColor.withOpacity(.4),
+                      fontWeight: FontWeight.w800),
+                ),
+                trailing: Icon(Icons.arrow_forward_ios),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 20, top: 20),
+            child: Container(
+              height: 70,
+              width: 320,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.grey.withOpacity(.3))),
+              child: ListTile(
+                leading: Padding(
+                  padding: const EdgeInsets.only(top: 0),
+                  child: Container(
+                      width: 60, child: Image.asset("assets/holy_church.png")),
+                ),
+                title: Text(
+                  "Our Website",
+                  style: GoogleFonts.sofiaSans(
+                      fontSize: 16,
+                      color: TextColor,
+                      fontWeight: FontWeight.w800),
+                ),
+                subtitle: Text(
+                  "www.ikiachurch.com",
+                  style: GoogleFonts.sofiaSans(
+                      fontSize: 16,
+                      color: TextColor.withOpacity(.4),
+                      fontWeight: FontWeight.w800),
+                ),
+                trailing: Icon(Icons.arrow_forward_ios),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

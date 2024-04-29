@@ -75,7 +75,7 @@ class _HomePageState extends State<HomePage> {
           setState(() {
             _currentIndex = val;
             _pageController.animateToPage(_currentIndex,
-                duration: Duration(milliseconds: 300), curve: Curves.linear);
+                duration: Duration(milliseconds: 300), curve: Curves.easeIn);
           });
         },
         children: [
@@ -161,11 +161,11 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                       Padding(
                                         padding:
-                                            EdgeInsets.only(left: width / 18 ),
+                                            EdgeInsets.only(left: width / 18),
                                         child: AdvancedSwitch(
                                           activeColor: primaryColor,
-                                          width: width/7.2,
-                                          height: height/30.16,
+                                          width: width / 7.2,
+                                          height: height / 30.16,
                                           controller: controller07,
                                         ),
                                       ),
@@ -258,7 +258,7 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                     ImageSlideshow(
-                      height: height/4.18,
+                      height: height / 4.18,
                       indicatorRadius: 4,
                       onPageChanged: (value) {
                         debugPrint('Page changed: $value');
@@ -597,7 +597,7 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                     SizedBox(
-                      height: height/37.7,
+                      height: height / 37.7,
                     ),
                   ],
                 ),
@@ -614,16 +614,15 @@ class _HomePageState extends State<HomePage> {
         selectedIndex: _currentIndex,
         showElevation: true,
         // itemCornerRadius: 24,
-        curve: Curves.easeIn,
+
         //animationDuration: ,
         containerHeight: 70,
-
         onItemSelected: (index) {
-          print("Page - $index");
-          setState(() => _currentIndex = index);
-          print("Page2 - $_currentIndex");
-          _pageController.animateToPage(_currentIndex,
-              duration: Duration(milliseconds: 150), curve: Curves.easeIn);
+          setState(() {
+            _currentIndex = index;
+            _pageController.animateToPage(_currentIndex,
+                duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+          });
         },
 
         items: <BottomNavyBarItem>[
