@@ -1,9 +1,14 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_church_management/Views/home_page.dart';
 import 'package:flutter_church_management/Views/sign_in_page.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:page_transition/page_transition.dart';
 
+import '../Views/login_page.dart';
 import '../constant.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -17,10 +22,24 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(
-        Duration(seconds: 3),
-        () => Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => SignInPage())));
+    _navigateToNextScreen();
+  }
+  User? user = FirebaseAuth.instance.currentUser;
+  Future<void> _navigateToNextScreen() async {
+    var document = await FirebaseFirestore.instance.collection("Users").get();
+    await Future.delayed(const Duration(seconds: 1));
+    if(user != null){
+      for(int i=0;i<document.docs.length;i++){
+        if(document.docs[i]['id']==user!.uid){
+          Navigator.pushReplacement(context, PageTransition(type: PageTransitionType.scale, child: HomePage()/*,duration: Duration(milliseconds: 1200),reverseDuration: Duration(milliseconds: 500)*/,alignment: Alignment.center));
+
+        }
+      }
+    }else {
+      Navigator.pushReplacement(context, PageTransition(type: PageTransitionType.scale, child: SignInPage()/*duration: Duration(milliseconds: 1200),reverseDuration: Duration(milliseconds: 500)*/,alignment: Alignment.center));
+
+
+    }
   }
 
   @override

@@ -13,7 +13,7 @@ class Notices extends StatefulWidget {
 }
 
 class _NoticesState extends State<Notices> {
-  String obj = "Recent";
+  String obj = "Today";
   var _trimMode = TrimMode.Line;
   int _trimLines = 3;
   int _trimLength = 240;
@@ -43,6 +43,7 @@ class _NoticesState extends State<Notices> {
       body: SafeArea(
         child: DefaultTabController(
           length: 2,
+
           child: Column(
             children: <Widget>[
               SizedBox(
@@ -69,14 +70,15 @@ class _NoticesState extends State<Notices> {
                           style: GoogleFonts.sofiaSans(
                               fontSize: 16,
                               color: obj == "Today"
-                                  ? textColor.withOpacity(.7)
-                                  : TextColor.withOpacity(.4),
+                                  ? textColor
+                                  : textColor.withOpacity(.4),
                               fontWeight: FontWeight.w800),
                         ),
                       ),
                     ),
                   ),
                   Tab(
+
                     child: Container(
                       height: height / 16.75,
                       width: width / 2.4,
@@ -88,7 +90,7 @@ class _NoticesState extends State<Notices> {
                           style: GoogleFonts.sofiaSans(
                               fontSize: 16,
                               color: obj == "Upcomings"
-                                  ? textColor.withOpacity(.7)
+                                  ? textColor
                                   : TextColor.withOpacity(.4),
                               fontWeight: FontWeight.w800),
                         ),

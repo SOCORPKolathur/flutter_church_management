@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_switch/flutter_advanced_switch.dart';
 import 'package:flutter_church_management/Views/Blogs.dart';
@@ -13,14 +15,15 @@ import 'package:flutter_church_management/Views/notifications.dart';
 import 'package:flutter_church_management/Views/podcasts.dart';
 import 'package:flutter_church_management/Views/product_page.dart';
 import 'package:flutter_church_management/Views/profile_page.dart';
+import 'package:flutter_church_management/Views/sign_in_page.dart';
 import 'package:flutter_church_management/Views/social_media.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
+import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 
 import '../constant.dart';
 import 'language_screen.dart';
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -37,7 +40,7 @@ class _HomePageState extends State<HomePage> {
     _pageController = PageController(initialPage: _currentIndex);
 
     super.initState();
-
+    getuser();
     Timer.periodic(Duration(minutes: 1), (timer) {
       _updateGreeting();
     });
@@ -60,6 +63,16 @@ class _HomePageState extends State<HomePage> {
         greeting = 'Good Evening!';
       });
     }
+  }
+  String userid="";
+  String username="User";
+  getuser() async {
+    var document = await FirebaseFirestore.instance.collection('Users').where('id',isEqualTo: FirebaseAuth.instance.currentUser!.uid).get();
+    setState(() {
+      username=document.docs[0]["firstName"];
+      userid=document.docs[0]["id"];
+    });
+
   }
 
   @override
@@ -239,18 +252,21 @@ class _HomePageState extends State<HomePage> {
                               left: width / 36, top: height / 15.08),
                           child: Container(
                             height: height / 18.85,
-                            width: width / 2,
+
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               color: textColor.withOpacity(.2),
                             ),
-                            child: Text(
-                              "Christopher",
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.sofiaSans(
-                                color: textColor,
-                                fontSize: 28,
-                                fontWeight: FontWeight.bold,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Text(
+                                username,
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.sofiaSans(
+                                  color: textColor,
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
@@ -610,7 +626,63 @@ class _HomePageState extends State<HomePage> {
           ProfilePage(),
         ],
       ),
-      bottomNavigationBar: BottomNavyBar(
+      bottomNavigationBar: SalomonBottomBar(
+        backgroundColor: Colors.white,
+        currentIndex: _currentIndex,
+        onTap: (i) {
+          setState(() => _currentIndex = i);
+          _pageController.animateToPage(i,
+              duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+          },
+        items: [
+          /// Home
+          SalomonBottomBarItem(
+            icon: Icon(Icons.home),
+            title: Text("Home",style: GoogleFonts.sofiaSans(
+                 fontSize: 15, fontWeight: FontWeight.w700),
+            ),
+            selectedColor: primaryColor,
+          ),
+
+          /// Likes
+          SalomonBottomBarItem(
+            icon: Icon(Icons.message_rounded),
+            title: Text("Connect",style: GoogleFonts.sofiaSans(
+                 fontSize: 15, fontWeight: FontWeight.w700),
+            ),
+            selectedColor: primaryColor,
+          ),
+
+          /// Search
+          SalomonBottomBarItem(
+            icon: Icon(Icons.shopping_cart),
+            title: Text("Product",style: GoogleFonts.sofiaSans(
+                 fontSize: 15, fontWeight: FontWeight.w700),
+            ),
+            selectedColor: primaryColor,
+          ),
+
+          /// Profile
+          SalomonBottomBarItem(
+            icon: Icon(Icons.group),
+            title: Text("Community",style: GoogleFonts.sofiaSans(
+                 fontSize: 15, fontWeight: FontWeight.w700),
+            ),
+            selectedColor: primaryColor,
+          ),
+          SalomonBottomBarItem(
+            icon: Icon(Icons.person),
+            title: Text("Profile",style: GoogleFonts.sofiaSans(
+                 fontSize: 15, fontWeight: FontWeight.w700),
+            ),
+            selectedColor: primaryColor,
+          ),
+        ],
+      ),
+
+
+
+      /*BottomNavyBar(
         selectedIndex: _currentIndex,
         showElevation: true,
         // itemCornerRadius: 24,
@@ -627,7 +699,8 @@ class _HomePageState extends State<HomePage> {
 
         items: <BottomNavyBarItem>[
           BottomNavyBarItem(
-            backgroundColor: primaryColor,
+
+           // backgroundColor: primaryColor,
             icon: Icon(Icons.home),
             title: Text(
               'Home',
@@ -647,7 +720,7 @@ class _HomePageState extends State<HomePage> {
             ),
             inactiveColor: Color(0xff262626).withOpacity(.3),
             activeColor: textColor,
-            backgroundColor: primaryColor,
+           // backgroundColor: primaryColor,
             textAlign: TextAlign.center,
           ),
           BottomNavyBarItem(
@@ -659,7 +732,7 @@ class _HomePageState extends State<HomePage> {
             ),
             inactiveColor: Color(0xff262626).withOpacity(.3),
             activeColor: textColor,
-            backgroundColor: primaryColor,
+            //backgroundColor: primaryColor,
             textAlign: TextAlign.center,
           ),
           BottomNavyBarItem(
@@ -671,23 +744,23 @@ class _HomePageState extends State<HomePage> {
             ),
             inactiveColor: Color(0xff262626).withOpacity(.3),
             activeColor: textColor,
-            backgroundColor: primaryColor,
+           // backgroundColor: primaryColor,
             textAlign: TextAlign.center,
           ),
           BottomNavyBarItem(
             icon: Icon(Icons.person),
             title: Text(
-              'Profile',
+              'person',
               style: GoogleFonts.sofiaSans(
                   color: textColor, fontSize: 15, fontWeight: FontWeight.w700),
             ),
             inactiveColor: Color(0xff262626).withOpacity(.3),
             activeColor: textColor,
-            backgroundColor: primaryColor,
+            //backgroundColor: primaryColor,
             textAlign: TextAlign.center,
           ),
         ],
-      ),
+      ),*/
     );
   }
 
@@ -754,10 +827,12 @@ class _HomePageState extends State<HomePage> {
                         decoration: BoxDecoration(
                             color: Color(0xffF5F5F5),
                             borderRadius: BorderRadius.circular(10)),
-                        child: Padding(
-                          padding: EdgeInsets.only(top: height / 94.25),
+                        child: Center(
                           child: Text(
-                            'Cancel',
+                            'Cancel',  style: GoogleFonts.sofiaSans(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16
+                          ),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -766,20 +841,34 @@ class _HomePageState extends State<HomePage> {
                     SizedBox(
                       width: width / 36,
                     ),
-                    Container(
-                      height: height / 18.85,
-                      width: width / 2.76,
-                      decoration: BoxDecoration(
-                          color: Color(0xffFF2020),
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Padding(
-                        padding: EdgeInsets.only(top: height / 94.25),
-                        child: Text(
-                          'Log Out',
-                          style: GoogleFonts.sofiaSans(
-                            color: textColor,
+                    InkWell(
+                      onTap: () async {
+                        await FirebaseAuth
+                            .instance
+                            .signOut();
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder:
+                                    (ctx) =>
+                                const SignInPage()));
+                      },
+                      child: Container(
+                        height: height / 18.85,
+                        width: width / 2.76,
+                        decoration: BoxDecoration(
+                            color: Color(0xffFF2020),
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Center(
+                          child: Text(
+                            'Log Out',
+                            style: GoogleFonts.sofiaSans(
+                              color: textColor,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
                         ),
                       ),
                     ),

@@ -1,8 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_church_management/Views/otp_page.dart';
 import 'package:flutter_church_management/Views/register_screen.dart';
 import 'package:flutter_church_management/Views/sign_in_page.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:rive/rive.dart';
 
 import '../constant.dart';
 import 'home_page.dart';
@@ -15,6 +19,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  TextEditingController phone = new TextEditingController();
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -32,12 +37,7 @@ class _LoginPageState extends State<LoginPage> {
                     Container(
                       child: Image.asset("assets/vec1.png"),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(top: height / 12.56),
-                      child: Container(
-                        child: Image.asset("assets/frame1.png"),
-                      ),
-                    ),
+
                   ],
                 ),
                 Padding(
@@ -89,6 +89,7 @@ class _LoginPageState extends State<LoginPage> {
                       color: textColor,
                       border: Border.all(color: Colors.grey.withOpacity(.3))),
                   child: TextField(
+                    controller: phone,
                     keyboardType: TextInputType.phone,
                     maxLength: 10,
                     decoration: InputDecoration(
@@ -115,9 +116,18 @@ class _LoginPageState extends State<LoginPage> {
                 Padding(
                   padding: EdgeInsets.only(top: height / 50.26),
                   child: InkWell(
-                    onTap: () {
-                      Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context) => OtpPage()));
+                    onTap: () async {
+                      var document = await FirebaseFirestore.instance.collection('Users').where('phone',isEqualTo: phone.text).get();
+
+                      if(document.docs.length>0) {
+                        Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeftWithFade, child: OtpPage(phone: phone.text),/*duration: Duration(milliseconds: 800),reverseDuration: Duration(milliseconds: 500)*/));
+
+                      }
+                      else{
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Your number is not register yet."))
+                        );
+                      }
                     },
                     child: Container(
                       height: height / 18.85,
@@ -169,6 +179,15 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ],
+            ),
+            Padding(
+              padding:  EdgeInsets.only(top: 50,left: 35),
+              child: Container(
+                // color: Colors.red,
+                width: width,
+                height: 220,
+                child: RiveAnimation.asset("assets/LOGINCHURCH .riv",fit: BoxFit.cover,),
+              ),
             ),
             Padding(
               padding: EdgeInsets.only(top: height / 1.34),

@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.2.3 <4.0.0'
+  sdk: '>=3.2.1 <4.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -51,9 +51,14 @@ dependencies:
   flutterotpfield: ^0.0.3
   rive: ^0.13.2
   chat_composer: ^1.0.3
-  sweet_nav_bar: ^1.0.7
   empty_widget:
   salomon_bottom_bar: ^3.3.2
+  persistent_bottom_nav_bar: ^5.0.2
+  firebase_core: ^2.15.0
+  firebase_auth: ^4.7.2
+  cloud_firestore: ^4.8.4
+  firebase_messaging: ^14.6.7
+  page_transition: ^2.1.0
 
 
 dev_dependencies:
