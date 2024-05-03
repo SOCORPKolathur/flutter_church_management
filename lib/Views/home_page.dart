@@ -22,6 +22,7 @@ import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 
+import '../Widgets/kText.dart';
 import '../constant.dart';
 import 'language_screen.dart';
 class HomePage extends StatefulWidget {
@@ -132,7 +133,7 @@ class _HomePageState extends State<HomePage> {
                             itemBuilder: (context) => [
                               PopupMenuItem(
                                   value: 1,
-                                  child: Text(
+                                  child: KText(text:
                                     "Language",
                                     style: GoogleFonts.sofiaSans(
                                         fontSize: 15,
@@ -140,7 +141,7 @@ class _HomePageState extends State<HomePage> {
                                   )),
                               PopupMenuItem(
                                   value: 2,
-                                  child: Text(
+                                  child: KText(text:
                                     "About Church",
                                     style: GoogleFonts.sofiaSans(
                                         fontSize: 15,
@@ -148,7 +149,7 @@ class _HomePageState extends State<HomePage> {
                                   )),
                               PopupMenuItem(
                                   value: 3,
-                                  child: Text(
+                                  child: KText(text:
                                     "Social Medias",
                                     style: GoogleFonts.sofiaSans(
                                         fontSize: 15,
@@ -156,7 +157,7 @@ class _HomePageState extends State<HomePage> {
                                   )),
                               PopupMenuItem(
                                   value: 4,
-                                  child: Text(
+                                  child: KText(text:
                                     "Contact Admin",
                                     style: GoogleFonts.sofiaSans(
                                         fontSize: 15,
@@ -166,7 +167,7 @@ class _HomePageState extends State<HomePage> {
                                   value: 5,
                                   child: Row(
                                     children: [
-                                      Text(
+                                      KText(text:
                                         "Privacy",
                                         style: GoogleFonts.sofiaSans(
                                             fontSize: 15,
@@ -186,7 +187,7 @@ class _HomePageState extends State<HomePage> {
                                   )),
                               PopupMenuItem(
                                   value: 6,
-                                  child: Text(
+                                  child: KText(text:
                                     "Log Out",
                                     style: GoogleFonts.sofiaSans(
                                         fontSize: 15,
@@ -239,7 +240,7 @@ class _HomePageState extends State<HomePage> {
                         Padding(
                           padding: EdgeInsets.only(
                               left: width / 24, top: height / 37.7),
-                          child: Text(
+                          child: KText(text:
                             greeting,
                             style: GoogleFonts.sofiaSans(
                               color: textColor,
@@ -259,7 +260,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: Text(
+                              child: KText(text:
                                 username,
                                 textAlign: TextAlign.center,
                                 style: GoogleFonts.sofiaSans(
@@ -303,7 +304,7 @@ class _HomePageState extends State<HomePage> {
                     Padding(
                       padding: EdgeInsets.only(
                           right: width / 2, top: height / 150.8),
-                      child: Text(
+                      child: KText(text:
                         "Quick Access",
                         style: GoogleFonts.sofiaSans(
                           color: TextColor,
@@ -337,7 +338,7 @@ class _HomePageState extends State<HomePage> {
                                       Padding(
                                         padding:
                                             EdgeInsets.only(right: width / 12),
-                                        child: Text(
+                                        child: KText(text:
                                           "Notices",
                                           style: GoogleFonts.sofiaSans(
                                             color: textColor,
@@ -346,7 +347,7 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                         ),
                                       ),
-                                      Text(
+                                      KText(text:
                                         "10 Notices For You",
                                         style: GoogleFonts.sofiaSans(
                                           color: textColor,
@@ -407,7 +408,7 @@ class _HomePageState extends State<HomePage> {
                                     Padding(
                                       padding:
                                           EdgeInsets.only(right: width / 9),
-                                      child: Text(
+                                      child: KText(text:
                                         "Events",
                                         style: GoogleFonts.sofiaSans(
                                           color: textColor,
@@ -416,7 +417,7 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                       ),
                                     ),
-                                    Text(
+                                    KText(text:
                                       "34 Events Available",
                                       style: GoogleFonts.sofiaSans(
                                         color: textColor,
@@ -484,7 +485,7 @@ class _HomePageState extends State<HomePage> {
                                         Padding(
                                           padding:
                                               EdgeInsets.only(right: width / 8),
-                                          child: Text(
+                                          child: KText(text:
                                             "Blogs",
                                             style: GoogleFonts.sofiaSans(
                                               color: textColor,
@@ -493,7 +494,7 @@ class _HomePageState extends State<HomePage> {
                                             ),
                                           ),
                                         ),
-                                        Text(
+                                        KText(text:
                                           "18 Blogs Available",
                                           style: GoogleFonts.sofiaSans(
                                             color: textColor,
@@ -562,7 +563,7 @@ class _HomePageState extends State<HomePage> {
                                         Padding(
                                           padding: EdgeInsets.only(
                                               right: width / 18),
-                                          child: Text(
+                                          child: KText(text:
                                             "Podcasts",
                                             style: GoogleFonts.sofiaSans(
                                               color: textColor,
@@ -571,7 +572,7 @@ class _HomePageState extends State<HomePage> {
                                             ),
                                           ),
                                         ),
-                                        Text(
+                                        KText(text:
                                           "26 Audios & Videos",
                                           style: GoogleFonts.sofiaSans(
                                             color: textColor,
@@ -638,7 +639,7 @@ class _HomePageState extends State<HomePage> {
           /// Home
           SalomonBottomBarItem(
             icon: Icon(Icons.home),
-            title: Text("Home",style: GoogleFonts.sofiaSans(
+            title: KText(text:"Home",style: GoogleFonts.sofiaSans(
                  fontSize: 15, fontWeight: FontWeight.w700),
             ),
             selectedColor: primaryColor,
@@ -647,7 +648,7 @@ class _HomePageState extends State<HomePage> {
           /// Likes
           SalomonBottomBarItem(
             icon: Icon(Icons.message_rounded),
-            title: Text("Connect",style: GoogleFonts.sofiaSans(
+            title: KText(text:"Connect",style: GoogleFonts.sofiaSans(
                  fontSize: 15, fontWeight: FontWeight.w700),
             ),
             selectedColor: primaryColor,
@@ -656,7 +657,7 @@ class _HomePageState extends State<HomePage> {
           /// Search
           SalomonBottomBarItem(
             icon: Icon(Icons.shopping_cart),
-            title: Text("Product",style: GoogleFonts.sofiaSans(
+            title: KText(text:"Product",style: GoogleFonts.sofiaSans(
                  fontSize: 15, fontWeight: FontWeight.w700),
             ),
             selectedColor: primaryColor,
@@ -665,14 +666,14 @@ class _HomePageState extends State<HomePage> {
           /// Profile
           SalomonBottomBarItem(
             icon: Icon(Icons.group),
-            title: Text("Community",style: GoogleFonts.sofiaSans(
+            title: KText(text:"Community",style: GoogleFonts.sofiaSans(
                  fontSize: 15, fontWeight: FontWeight.w700),
             ),
             selectedColor: primaryColor,
           ),
           SalomonBottomBarItem(
             icon: Icon(Icons.person),
-            title: Text("Profile",style: GoogleFonts.sofiaSans(
+            title: KText(text:"Profile",style: GoogleFonts.sofiaSans(
                  fontSize: 15, fontWeight: FontWeight.w700),
             ),
             selectedColor: primaryColor,
@@ -702,7 +703,7 @@ class _HomePageState extends State<HomePage> {
 
            // backgroundColor: primaryColor,
             icon: Icon(Icons.home),
-            title: Text(
+            title: KText(text:
               'Home',
               style: GoogleFonts.sofiaSans(
                   color: textColor, fontSize: 16, fontWeight: FontWeight.w700),
@@ -713,7 +714,7 @@ class _HomePageState extends State<HomePage> {
           ),
           BottomNavyBarItem(
             icon: Icon(Icons.message_rounded),
-            title: Text(
+            title: KText(text:
               'Connect',
               style: GoogleFonts.sofiaSans(
                   color: textColor, fontSize: 15, fontWeight: FontWeight.w700),
@@ -725,7 +726,7 @@ class _HomePageState extends State<HomePage> {
           ),
           BottomNavyBarItem(
             icon: Icon(Icons.shopping_cart),
-            title: Text(
+            title: KText(text:
               'Product',
               style: GoogleFonts.sofiaSans(
                   color: textColor, fontSize: 15, fontWeight: FontWeight.w700),
@@ -737,7 +738,7 @@ class _HomePageState extends State<HomePage> {
           ),
           BottomNavyBarItem(
             icon: Icon(Icons.group),
-            title: Text(
+            title: KText(text:
               'Community',
               style: GoogleFonts.sofiaSans(
                   color: textColor, fontSize: 15, fontWeight: FontWeight.w700),
@@ -749,7 +750,7 @@ class _HomePageState extends State<HomePage> {
           ),
           BottomNavyBarItem(
             icon: Icon(Icons.person),
-            title: Text(
+            title: KText(text:
               'person',
               style: GoogleFonts.sofiaSans(
                   color: textColor, fontSize: 15, fontWeight: FontWeight.w700),
@@ -789,9 +790,10 @@ class _HomePageState extends State<HomePage> {
               ),
               Padding(
                 padding: EdgeInsets.only(left: width / 18),
-                child: Text(
+                child: KText(text:
                   'Are you sure you want to logout?',
                   textAlign: TextAlign.center,
+                  style: GoogleFonts.sofiaSans(),
                 ),
               ),
             ],
@@ -803,7 +805,7 @@ class _HomePageState extends State<HomePage> {
                   padding: EdgeInsets.only(left: width / 18),
                   child: Container(
                     width: width / 18,
-                    child: Text(
+                    child: KText(text:
                       'Logging out will terminate your current session.',
                       textAlign: TextAlign.center,
                       style: GoogleFonts.sofiaSans(
@@ -828,7 +830,7 @@ class _HomePageState extends State<HomePage> {
                             color: Color(0xffF5F5F5),
                             borderRadius: BorderRadius.circular(10)),
                         child: Center(
-                          child: Text(
+                          child: KText(text:
                             'Cancel',  style: GoogleFonts.sofiaSans(
                               fontWeight: FontWeight.w700,
                               fontSize: 16
@@ -860,7 +862,7 @@ class _HomePageState extends State<HomePage> {
                             color: Color(0xffFF2020),
                             borderRadius: BorderRadius.circular(10)),
                         child: Center(
-                          child: Text(
+                          child: KText(text:
                             'Log Out',
                             style: GoogleFonts.sofiaSans(
                               color: textColor,
@@ -897,8 +899,9 @@ class _HomePageState extends State<HomePage> {
             horizontal: 20,
           ),
           surfaceTintColor: Colors.transparent,
-          title: Text(
+          title: KText(text:
             'Contact Our Admin',
+            style: GoogleFonts.sofiaSans(),
           ),
           content: SingleChildScrollView(
             child: ListBody(
@@ -909,7 +912,7 @@ class _HomePageState extends State<HomePage> {
                       height: height / 15.08,
                       child: Image.asset("assets/Requirement.png"),
                     ),
-                    Text(
+                    KText(text:
                       "Reason :",
                       style: GoogleFonts.sofiaSans(
                         color: TextColor,
@@ -941,7 +944,7 @@ class _HomePageState extends State<HomePage> {
                       height: height / 18.85,
                       child: Image.asset("assets/Playlist.png"),
                     ),
-                    Text(
+                    KText(text:
                       "Message :",
                       style: GoogleFonts.sofiaSans(
                         color: TextColor,
@@ -985,7 +988,7 @@ class _HomePageState extends State<HomePage> {
                             borderRadius: BorderRadius.circular(10)),
                         child: Padding(
                           padding: EdgeInsets.only(top: height / 94.25),
-                          child: Text(
+                          child: KText(text:
                             'Cancel',
                             style: GoogleFonts.sofiaSans(
                               color: textColor,
@@ -1006,7 +1009,7 @@ class _HomePageState extends State<HomePage> {
                           borderRadius: BorderRadius.circular(10)),
                       child: Padding(
                         padding: EdgeInsets.only(top: height / 94.25),
-                        child: Text(
+                        child: KText(text:
                           'Submit',
                           style: GoogleFonts.sofiaSans(
                             color: textColor,

@@ -2,7 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_church_management/Screens/splash_screen.dart';
-
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:flutter_church_management/Views/home_page.dart';
 
 import 'Views/demo.dart';
@@ -18,7 +19,11 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown
   ]);
-  runApp(const MyApp());
+  var delegate = await LocalizationDelegate.create(
+      basePath: 'assets/i18n/',
+      fallbackLocale: 'en_US',
+      supportedLocales: ['ta','te','ml','kn','en_US','bn','hi','es','pt','fr','nl','de','it','sv']);
+  runApp(LocalizedApp(delegate, MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -27,7 +32,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    var localizationDelegate = LocalizedApp.of(context).delegate;
+    return LocalizationProvider(
+        state: LocalizationProvider.of(context).state,
+    child: MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'IKIA Church Management',
       theme: ThemeData(
@@ -35,6 +43,14 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: SplashScreen(),
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        localizationDelegate
+      ],
+      supportedLocales: localizationDelegate.supportedLocales,
+      locale: localizationDelegate.currentLocale,
+    )
     );
   }
 }

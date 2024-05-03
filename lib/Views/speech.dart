@@ -1,11 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_church_management/Widgets/loading.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:readmore/readmore.dart';
 
+import '../Widgets/nodata.dart';
 import '../constant.dart';
 
 class SpeechScreen extends StatefulWidget {
-  const SpeechScreen({super.key});
+  String phone;
+   SpeechScreen({required this.phone});
 
   @override
   State<SpeechScreen> createState() => _SpeechScreenState();
@@ -33,458 +37,121 @@ class _SpeechScreenState extends State<SpeechScreen> {
               color: textColor,
             )),
         title: Text(
-          "MY Speech",
+          "My Speech",
           style: GoogleFonts.sofiaSans(
               fontSize: 20, color: textColor, fontWeight: FontWeight.w800),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-            height: height/25.13,
-            ),
-            Row(
-              children: [
-                SizedBox(
-                  width: width/18,
-                ),
-                Container(
-                 height: height/37.7,
-                  width: width/18,
-                  child: Image.asset("assets/calender.png"),
-                ),
-                SizedBox(
-                   width: width/36,
-                ),
-                Text(
-                  "March 27, 2024",
-                  style: GoogleFonts.sofiaSans(
-                      fontSize: 16,
-                      color: TextColor.withOpacity(.5),
-                      fontWeight: FontWeight.w800),
-                ),
-                SizedBox(
-                   width: width/5.14,
-                ),
-                Container(
-                 height: height/37.7,
-                  width: width/18,
-                  child: Image.asset("assets/Time.png"),
-                ),
-                SizedBox(
-                   width: width/36,
-                ),
-                Text(
-                  "03:30 Pm",
-                  style: GoogleFonts.sofiaSans(
-                      fontSize: 16,
-                      color: TextColor.withOpacity(.5),
-                      fontWeight: FontWeight.w800),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: height/75.4,
-            ),
-            Padding(
-              padding:  EdgeInsets.only(right: width/1.8),
-              child: Text(
-                "Speech Title",
-                style: GoogleFonts.sofiaSans(
-                    fontSize: 20,
-                    color: TextColor,
-                    fontWeight: FontWeight.w800),
-              ),
-            ),
-            SizedBox(
-              height: height/75.4,
-            ),
-            Padding(
-              padding:  EdgeInsets.only(right: width/18),
-              child: Text(
-                '"Good morning, beloved congregation,"',
-                style: GoogleFonts.sofiaSans(
-                    fontSize: 16,
-                    color: TextColor.withOpacity(.5),
-                    fontWeight: FontWeight.w800),
-              ),
-            ),
-            SizedBox(
-             height: height/37.7,
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: width/24),
-              child: Container(
-                width: width/1.16,
-                child: ReadMoreText(
-                  "As we gather together in the presence of the Lord, I am filled with gratitude "
-                  "for each and every one of you who has joined us today. Our faith community is a source"
-                  " of strength, love, and support, and it is truly a blessing to be able to worship "
-                  "together in unity.Today, let us reflect on the power of faith and the hope it"
-                  " brings into our lives. In times of joy, our faith uplifts us, and in moments of "
-                  "trial, it sustains us. Through our shared journey of faith, we find comfort "
-                  "in knowing that we are never alone, for God walks beside us every step of the way."
-                  "As we delve into today's sermon, let us open our hearts and minds to receive"
-                  " the message of hope, love, and redemption. May it inspire us to live each day"
-                  " with purpose and to extend grace and compassion to all those we encounter."
-                  "I encourage each of you to take a moment to offer prayers for those in need,"
-                  " to lend a helping hand to those facing challenges, and to spread kindness wherever "
-                  "you go. Together, let us be beacons of light in a world that so desperately needs it."
-                  "Thank you for being a part of our church family, and may God's love continue to guide"
-                  " and bless us all.Amen.",
+      body: StreamBuilder(
+          stream: FirebaseFirestore.instance.collection("Speeches").orderBy("timestamp",descending: true).snapshots(),
+          builder: (context, snapshot) {
+            return ListView.builder(
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (context,index) {
+                  if(snapshot.data!.docs.length==0){
+                    return Nodata();
+                  }
+                  if(snapshot.hasData) {
+                    var data = snapshot.data!.docs[index];
+                    return data["lastName"] == widget.phone ? Container(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: height/25.13,
+                          ),
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: width/18,
+                              ),
+                              Container(
+                                height: height/37.7,
+                                width: width/18,
+                                child: Image.asset("assets/calender.png"),
+                              ),
+                              SizedBox(
+                                width: width/36,
+                              ),
+                              Text(
+                                data["Date"],
+                                style: GoogleFonts.sofiaSans(
+                                    fontSize: 16,
+                                    color: TextColor.withOpacity(.5),
+                                    fontWeight: FontWeight.w800),
+                              ),
+                              SizedBox(
+                                width: width/3.14,
+                              ),
+                              Container(
+                                height: height/37.7,
+                                width: width/18,
+                                child: Image.asset("assets/Time.png"),
+                              ),
+                              SizedBox(
+                                width: width/36,
+                              ),
+                              Text(
+                                data["Time"],
+                                style: GoogleFonts.sofiaSans(
+                                    fontSize: 16,
+                                    color: TextColor.withOpacity(.5),
+                                    fontWeight: FontWeight.w800),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: height/75.4,
+                          ),
+                       /*   Padding(
+                            padding:  EdgeInsets.only(right: width/1.8),
+                            child: Text(
+                              "Speech Title",
+                              style: GoogleFonts.sofiaSans(
+                                  fontSize: 20,
+                                  color: TextColor,
+                                  fontWeight: FontWeight.w800),
+                            ),
+                          ),
+                          SizedBox(
+                            height: height/75.4,
+                          ),*/
 
-                  trimMode: _trimMode,
-                  trimLines: _trimLines,
-                  trimLength: _trimLength,
-                  //isCollapsed: isCollapsed,
-                  style: GoogleFonts.sofiaSans(color: TextColor),
-                  colorClickableText: primaryColor,
-                  trimCollapsedText: 'Read more',
-                  trimExpandedText: ' Less',
-                ),
-              ),
-            ),
-            SizedBox(
-              height: height/75.4,
-            ),
-            Divider(
-              color: Colors.grey.withOpacity(.3),
-              endIndent: 10,
-              indent: 10,
-            ),
-            Row(
-              children: [
-                SizedBox(
-                  width: width/18,
-                ),
-                Container(
-                 height: height/37.7,
-                  width: width/18,
-                  child: Image.asset("assets/calender.png"),
-                ),
-                SizedBox(
-                   width: width/36,
-                ),
-                Text(
-                  "March 27, 2024",
-                  style: GoogleFonts.sofiaSans(
-                      fontSize: 16,
-                      color: TextColor.withOpacity(.5),
-                      fontWeight: FontWeight.w800),
-                ),
-                SizedBox(
-                   width: width/5.14,
-                ),
-                Container(
-                 height: height/37.7,
-                  width: width/18,
-                  child: Image.asset("assets/Time.png"),
-                ),
-                SizedBox(
-                   width: width/36,
-                ),
-                Text(
-                  "03:30 Pm",
-                  style: GoogleFonts.sofiaSans(
-                      fontSize: 16,
-                      color: TextColor.withOpacity(.5),
-                      fontWeight: FontWeight.w800),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: height/75.4,
-            ),
-            Padding(
-              padding:  EdgeInsets.only(right: width/1.8),
-              child: Text(
-                "Speech Title",
-                style: GoogleFonts.sofiaSans(
-                    fontSize: 20,
-                    color: TextColor,
-                    fontWeight: FontWeight.w800),
-              ),
-            ),
-            SizedBox(
-              height: height/75.4,
-            ),
-            Padding(
-              padding:  EdgeInsets.only(right: width/18),
-              child: Text(
-                '"Good morning, beloved congregation,"',
-                style: GoogleFonts.sofiaSans(
-                    fontSize: 16,
-                    color: TextColor.withOpacity(.5),
-                    fontWeight: FontWeight.w800),
-              ),
-            ),
-            SizedBox(
-             height: height/37.7,
-            ),
-            Padding(
-              padding:  EdgeInsets.only(left: width/24),
-              child: Container(
-                width: width/1.16,
-                child: ReadMoreText(
-                  "As we gather together in the presence of the Lord, I am filled with gratitude "
-                  "for each and every one of you who has joined us today. Our faith community is a source"
-                  " of strength, love, and support, and it is truly a blessing to be able to worship "
-                  "together in unity.Today, let us reflect on the power of faith and the hope it"
-                  " brings into our lives. In times of joy, our faith uplifts us, and in moments of "
-                  "trial, it sustains us. Through our shared journey of faith, we find comfort "
-                  "in knowing that we are never alone, for God walks beside us every step of the way."
-                  "As we delve into today's sermon, let us open our hearts and minds to receive"
-                  " the message of hope, love, and redemption. May it inspire us to live each day"
-                  " with purpose and to extend grace and compassion to all those we encounter."
-                  "I encourage each of you to take a moment to offer prayers for those in need,"
-                  " to lend a helping hand to those facing challenges, and to spread kindness wherever "
-                  "you go. Together, let us be beacons of light in a world that so desperately needs it."
-                  "Thank you for being a part of our church family, and may God's love continue to guide"
-                  " and bless us all.Amen.",
+                          Padding(
+                            padding: EdgeInsets.only(left: width/24),
+                            child: Container(
+                              width: width/1.16,
+                              child: ReadMoreText(
+                                data["speech"],
 
-                  trimMode: _trimMode,
-                  trimLines: _trimLines,
-                  trimLength: _trimLength,
-                  //isCollapsed: isCollapsed,
-                  style: GoogleFonts.sofiaSans(color: TextColor),
-                  colorClickableText: primaryColor,
-                  trimCollapsedText: 'Read more',
-                  trimExpandedText: ' Less',
-                ),
-              ),
-            ),
-            SizedBox(
-              height: height/75.4,
-            ),
-            Divider(
-              color: Colors.grey.withOpacity(.3),
-              endIndent: 10,
-              indent: 10,
-            ),
-            Row(
-              children: [
-                SizedBox(
-                  width: width/18,
-                ),
-                Container(
-                 height: height/37.7,
-                  width: width/18,
-                  child: Image.asset("assets/calender.png"),
-                ),
-                SizedBox(
-                   width: width/36,
-                ),
-                Text(
-                  "March 27, 2024",
-                  style: GoogleFonts.sofiaSans(
-                      fontSize: 16,
-                      color: TextColor.withOpacity(.5),
-                      fontWeight: FontWeight.w800),
-                ),
-                SizedBox(
-                   width: width/5.14,
-                ),
-                Container(
-                 height: height/37.7,
-                  width: width/18,
-                  child: Image.asset("assets/Time.png"),
-                ),
-                SizedBox(
-                   width: width/36,
-                ),
-                Text(
-                  "03:30 Pm",
-                  style: GoogleFonts.sofiaSans(
-                      fontSize: 16,
-                      color: TextColor.withOpacity(.5),
-                      fontWeight: FontWeight.w800),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: height/75.4,
-            ),
-            Padding(
-              padding:  EdgeInsets.only(right: width/1.8),
-              child: Text(
-                "Speech Title",
-                style: GoogleFonts.sofiaSans(
-                    fontSize: 20,
-                    color: TextColor,
-                    fontWeight: FontWeight.w800),
-              ),
-            ),
-            SizedBox(
-              height: height/75.4,
-            ),
-            Padding(
-              padding:  EdgeInsets.only(right: width/18),
-              child: Text(
-                '"Good morning, beloved congregation,"',
-                style: GoogleFonts.sofiaSans(
-                    fontSize: 16,
-                    color: TextColor.withOpacity(.5),
-                    fontWeight: FontWeight.w800),
-              ),
-            ),
-            SizedBox(
-             height: height/37.7,
-            ),
-            Padding(
-              padding:  EdgeInsets.only(left: width/24),
-              child: Container(
-                width: width/1.16,
-                child: ReadMoreText(
-                  "As we gather together in the presence of the Lord, I am filled with gratitude "
-                  "for each and every one of you who has joined us today. Our faith community is a source"
-                  " of strength, love, and support, and it is truly a blessing to be able to worship "
-                  "together in unity.Today, let us reflect on the power of faith and the hope it"
-                  " brings into our lives. In times of joy, our faith uplifts us, and in moments of "
-                  "trial, it sustains us. Through our shared journey of faith, we find comfort "
-                  "in knowing that we are never alone, for God walks beside us every step of the way."
-                  "As we delve into today's sermon, let us open our hearts and minds to receive"
-                  " the message of hope, love, and redemption. May it inspire us to live each day"
-                  " with purpose and to extend grace and compassion to all those we encounter."
-                  "I encourage each of you to take a moment to offer prayers for those in need,"
-                  " to lend a helping hand to those facing challenges, and to spread kindness wherever "
-                  "you go. Together, let us be beacons of light in a world that so desperately needs it."
-                  "Thank you for being a part of our church family, and may God's love continue to guide"
-                  " and bless us all.Amen.",
+                                trimMode: _trimMode,
+                                trimLines: _trimLines,
+                                trimLength: _trimLength,
+                                //isCollapsed: isCollapsed,
+                                style: GoogleFonts.sofiaSans(color: TextColor),
+                                colorClickableText: primaryColor,
+                                trimCollapsedText: 'Read more',
+                                trimExpandedText: ' Less',
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: height/75.4,
+                          ),
+                          Divider(
+                            color: Colors.grey.withOpacity(.3),
+                            endIndent: 10,
+                            indent: 10,
+                          ),
 
-                  trimMode: _trimMode,
-                  trimLines: _trimLines,
-                  trimLength: _trimLength,
-                  //isCollapsed: isCollapsed,
-                  style: GoogleFonts.sofiaSans(color: TextColor),
-                  colorClickableText: primaryColor,
-                  trimCollapsedText: 'Read more',
-                  trimExpandedText: ' Less',
-                ),
-              ),
-            ),
-            SizedBox(
-              height: height/75.4,
-            ),
-            Divider(
-              color: Colors.grey.withOpacity(.3),
-              endIndent: 10,
-              indent: 10,
-            ),
-            Row(
-              children: [
-                SizedBox(
-                  width: width/18,
-                ),
-                Container(
-                 height: height/37.7,
-                  width: width/18,
-                  child: Image.asset("assets/calender.png"),
-                ),
-                SizedBox(
-                   width: width/36,
-                ),
-                Text(
-                  "March 27, 2024",
-                  style: GoogleFonts.sofiaSans(
-                      fontSize: 16,
-                      color: TextColor.withOpacity(.5),
-                      fontWeight: FontWeight.w800),
-                ),
-                SizedBox(
-                   width: width/5.14,
-                ),
-                Container(
-                 height: height/37.7,
-                  width: width/18,
-                  child: Image.asset("assets/Time.png"),
-                ),
-                SizedBox(
-                   width: width/36,
-                ),
-                Text(
-                  "03:30 Pm",
-                  style: GoogleFonts.sofiaSans(
-                      fontSize: 16,
-                      color: TextColor.withOpacity(.5),
-                      fontWeight: FontWeight.w800),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: height/75.4,
-            ),
-            Padding(
-              padding: EdgeInsets.only(right: width/1.8),
-              child: Text(
-                "Speech Title",
-                style: GoogleFonts.sofiaSans(
-                    fontSize: 20,
-                    color: TextColor,
-                    fontWeight: FontWeight.w800),
-              ),
-            ),
-            SizedBox(
-              height: height/75.4,
-            ),
-            Padding(
-              padding: EdgeInsets.only(right: width/18),
-              child: Text(
-                '"Good morning, beloved congregation,"',
-                style: GoogleFonts.sofiaSans(
-                    fontSize: 16,
-                    color: TextColor.withOpacity(.5),
-                    fontWeight: FontWeight.w800),
-              ),
-            ),
-            SizedBox(
-             height: height/37.7,
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: width/24),
-              child: Container(
-                width: width/1.16,
-                child: ReadMoreText(
-                  "As we gather together in the presence of the Lord, I am filled with gratitude "
-                  "for each and every one of you who has joined us today. Our faith community is a source"
-                  " of strength, love, and support, and it is truly a blessing to be able to worship "
-                  "together in unity.Today, let us reflect on the power of faith and the hope it"
-                  " brings into our lives. In times of joy, our faith uplifts us, and in moments of "
-                  "trial, it sustains us. Through our shared journey of faith, we find comfort "
-                  "in knowing that we are never alone, for God walks beside us every step of the way."
-                  "As we delve into today's sermon, let us open our hearts and minds to receive"
-                  " the message of hope, love, and redemption. May it inspire us to live each day"
-                  " with purpose and to extend grace and compassion to all those we encounter."
-                  "I encourage each of you to take a moment to offer prayers for those in need,"
-                  " to lend a helping hand to those facing challenges, and to spread kindness wherever "
-                  "you go. Together, let us be beacons of light in a world that so desperately needs it."
-                  "Thank you for being a part of our church family, and may God's love continue to guide"
-                  " and bless us all.Amen.",
+                        ],
+                      ),
+                    ) :SizedBox();
+                  }
 
-                  trimMode: _trimMode,
-                  trimLines: _trimLines,
-                  trimLength: _trimLength,
-                  //isCollapsed: isCollapsed,
-                  style: GoogleFonts.sofiaSans(color: TextColor),
-                  colorClickableText: primaryColor,
-                  trimCollapsedText: 'Read more',
-                  trimExpandedText: ' Less',
-                ),
-              ),
-            ),
-            SizedBox(
-              height: height/75.4,
-            ),
-            Divider(
-              color: Colors.grey.withOpacity(.3),
-              endIndent: 10,
-              indent: 10,
-            ),
-            SizedBox(
-            height: height/25.13,
-            ),
-          ],
-        ),
+                  return LoadingState();
+                }
+            );
+          }
       ),
     );
   }

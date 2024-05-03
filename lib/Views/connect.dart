@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_church_management/Views/chatscreen.dart';
 import 'package:flutter_church_management/constant.dart';
@@ -11,6 +13,24 @@ class ConnectPage extends StatefulWidget {
 }
 
 class _ConnectPageState extends State<ConnectPage> {
+  String userid="";
+  String username="User";
+  getuser() async {
+    var document = await FirebaseFirestore.instance.collection('Users').where('id',isEqualTo: FirebaseAuth.instance.currentUser!.uid).get();
+    setState(() {
+      username=document.docs[0]["firstName"];
+      userid=document.docs[0].id;
+    });
+
+  }
+
+  @override
+  void initState() {
+    getuser();
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -33,8 +53,13 @@ class _ConnectPageState extends State<ConnectPage> {
         children: [
           ListTile(
             onTap: (){
+              print(userid);
               Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context)=>ChatScreen("Church Group"))
+                  MaterialPageRoute(builder: (context)=>ChatScreen(
+                      title: "Church Group",userDocId: userid,uid: FirebaseAuth.instance.currentUser!.uid,
+                        collection:"ChurchChat",isClan: false,
+                      clanId: "",committeeId:"",
+                      isCommittee: false))
               );
             },
             leading: Padding(
@@ -77,9 +102,9 @@ class _ConnectPageState extends State<ConnectPage> {
           ),
           ListTile(
             onTap: (){
-              Navigator.of(context).push(
+              /*Navigator.of(context).push(
                   MaterialPageRoute(builder: (context)=>ChatScreen("Chennai Zone"))
-              );
+              );*/
             },
             leading: Padding(
               padding:  EdgeInsets.only(left: width/36),
@@ -121,9 +146,9 @@ class _ConnectPageState extends State<ConnectPage> {
           ),
           ListTile(
             onTap: (){
-              Navigator.of(context).push(
+             /* Navigator.of(context).push(
                   MaterialPageRoute(builder: (context)=>ChatScreen("Choir Group"))
-              );
+              );*/
             },
             leading: Padding(
               padding: EdgeInsets.only(left: width/36),
@@ -165,9 +190,9 @@ class _ConnectPageState extends State<ConnectPage> {
           ),
           ListTile(
             onTap: (){
-              Navigator.of(context).push(
+            /*  Navigator.of(context).push(
                   MaterialPageRoute(builder: (context)=>ChatScreen("Blood requirements"))
-              );
+              );*/
             },
             leading: Padding(
               padding: EdgeInsets.only(left: width/36),

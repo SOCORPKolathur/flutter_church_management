@@ -1,9 +1,12 @@
 import 'package:buttons_tabbar/buttons_tabbar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:readmore/readmore.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../Widgets/loading.dart';
+import '../Widgets/nodata.dart';
 import '../constant.dart';
 
 class EventsScreen extends StatefulWidget {
@@ -18,6 +21,29 @@ class _EventsScreenState extends State<EventsScreen> {
   int _trimLines = 3;
   int _trimLength = 240;
   String obj = "Today";
+
+
+  int today = 0;
+  int upcomming =0;
+
+
+
+  getdoccount() async {
+    var docu = await FirebaseFirestore.instance.collection("Events").where("date",isEqualTo: "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}").get();
+    var docu2 = await FirebaseFirestore.instance.collection("Events").where("date",isNotEqualTo: "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}").get();
+    setState(() {
+      today = docu.docs.length;
+      upcomming = docu2.docs.length;
+    });
+
+  }
+
+  @override
+  void initState() {
+    getdoccount();
+    // TODO: implement initState
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -83,11 +109,11 @@ class _EventsScreenState extends State<EventsScreen> {
                       child: Padding(
                         padding:  EdgeInsets.only(top: height/75.4),
                         child: Text(
-                          "Upcomings",
+                          "All Events",
                           textAlign: TextAlign.center,
                           style: GoogleFonts.sofiaSans(
                               fontSize: 16,
-                              color: obj == "Upcomings"
+                              color: obj == "All Events"
                                   ? textColor.withOpacity(.7)
                                   : TextColor.withOpacity(.4),
                               fontWeight: FontWeight.w800),
@@ -100,460 +126,367 @@ class _EventsScreenState extends State<EventsScreen> {
               Expanded(
                 child: TabBarView(
                   children: <Widget>[
-                    SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: height/37.7,
-                          ),
-                          Row(
-                            children: [
-                              SizedBox(
-                                width: width/18,
-                              ),
-                              Container(
-                                 height: height/37.7,
-                                width: width/18,
-                                child: Image.asset("assets/calender.png"),
-                              ),
-                              SizedBox(
-                                width: width/36,
-                              ),
-                              Text(
-                                "March 27, 2024",
-                                style: GoogleFonts.sofiaSans(
-                                    fontSize: 16,
-                                    color: TextColor.withOpacity(.5),
-                                    fontWeight: FontWeight.w800),
-                              ),
-                              SizedBox(
-                                 width: width/5.14,
-                              ),
-                              Container(
-                                 height: height/37.7,
-                                width: width/18,
-                                child: Image.asset("assets/Time.png"),
-                              ),
-                              SizedBox(
-                                width: width/36,
-                              ),
-                              Text(
-                                "03:30 Pm",
-                                style: GoogleFonts.sofiaSans(
-                                    fontSize: 16,
-                                    color: TextColor.withOpacity(.5),
-                                    fontWeight: FontWeight.w800),
-                              ),
-                            ],
-                          ),
-                          ListTile(
-                            leading: Container(
-                              width: width/7.2,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20)),
-                              child: Image.asset("assets/birthday.png"),
-                            ),
-                            title: Text(
-                              "Birthday Party",
-                              style: GoogleFonts.sofiaSans(
-                                  fontSize: 20,
-                                  color: TextColor,
-                                  fontWeight: FontWeight.w800),
-                            ),
-                            subtitle: Row(
-                              children: [
-                                Icon(
-                                  Icons.location_on,
-                                  color: Colors.green,
-                                  size: 15,
-                                ),
-                                Text("Chennai",
-                                    style: GoogleFonts.sofiaSans(
-                                        fontSize: 12,
-                                        color: TextColor.withOpacity(.5),
-                                        fontWeight: FontWeight.w800)),
-                              ],
-                            ),
-                            trailing: Container(
-                                 height: height/18.85,
-                           width: width/3.6,
-                              decoration: BoxDecoration(
-                                color: primaryColor,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.only(top: height/94.25),
-                                child: Text(
-                                  "Register",
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.sofiaSans(
-                                      fontSize: 16,
-                                      color: textColor.withOpacity(.7),
-                                      fontWeight: FontWeight.w800),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                                height: height/75.4,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(right: width/2.3),
-                            child: Text(
-                              "Dear Family and Friends,",
-                              style: GoogleFonts.sofiaSans(
-                                  fontSize: 16,
-                                  color: TextColor.withOpacity(.5),
-                                  fontWeight: FontWeight.w800),
-                            ),
-                          ),
-                          SizedBox(
-                                height: height/75.4,
-                          ),
-                          Row(
-                            children: [
-                              Padding(
-                                padding:EdgeInsets.only(left: width/24),
-                                child: Container(
-                                width: width/1.16,
-                                  child: ReadMoreText(
-                                    'We are currently seeking 5 dedicated individuals to join our vibrant team of volunteers. '
-                                    'Whether you’re looking to strengthen your faith, connect with your community,'
-                                    'or simply share your talents, we have a place for you! ',
+                    today>0?
+                    StreamBuilder(
+                      stream: FirebaseFirestore.instance.collection("Events").orderBy("timestamp",descending: true).snapshots(),
+                      builder: (context,snapshot){
 
-                                    trimMode: _trimMode,
-                                    trimLines: _trimLines,
-                                    trimLength: _trimLength,
-                                    //isCollapsed: isCollapsed,
-                                    style:
-                                        GoogleFonts.sofiaSans(color: TextColor),
-                                    colorClickableText: primaryColor,
-                                    trimCollapsedText: 'Read more',
-                                    trimExpandedText: ' Less',
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding:  EdgeInsets.only(top: height/15.08),
-                                child: InkWell(
-                                  onTap: () {
-                                    Share.share(
-                                        'check out my website https://example.com',
-                                        subject: 'Look what I made!');
-                                  },
-                                  child: Icon(
-                                    Icons.share,
-                                    color: primaryColor,
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                          Divider(
-                            color: Colors.grey.withOpacity(.3),
-                            endIndent: 10,
-                            indent: 10,
-                          ),
-                          Row(
-                            children: [
-                              SizedBox(
-                                width: width/18,
-                              ),
-                              Container(
-                                 height: height/37.7,
-                                width: width/18,
-                                child: Image.asset("assets/calender.png"),
-                              ),
-                              SizedBox(
-                                width: width/36,
-                              ),
-                              Text(
-                                "March 27, 2024",
-                                style: GoogleFonts.sofiaSans(
-                                    fontSize: 16,
-                                    color: TextColor.withOpacity(.5),
-                                    fontWeight: FontWeight.w800),
-                              ),
-                              SizedBox(
-                                 width: width/5.14,
-                              ),
-                              Container(
-                                 height: height/37.7,
-                                width: width/18,
-                                child: Image.asset("assets/Time.png"),
-                              ),
-                              SizedBox(
-                                width: width/36,
-                              ),
-                              Text(
-                                "03:30 Pm",
-                                style: GoogleFonts.sofiaSans(
-                                    fontSize: 16,
-                                    color: TextColor.withOpacity(.5),
-                                    fontWeight: FontWeight.w800),
-                              ),
-                            ],
-                          ),
-                          ListTile(
-                            leading: Container(
-                              width: width/7.2,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20)),
-                              child: Image.asset("assets/birthday.png"),
-                            ),
-                            title: Text(
-                              "Birthday Party",
-                              style: GoogleFonts.sofiaSans(
-                                  fontSize: 20,
-                                  color: TextColor,
-                                  fontWeight: FontWeight.w800),
-                            ),
-                            subtitle: Row(
-                              children: [
-                                Icon(
-                                  Icons.location_on,
-                                  color: Colors.green,
-                                  size: 15,
-                                ),
-                                Text("Chennai",
-                                    style: GoogleFonts.sofiaSans(
-                                        fontSize: 12,
-                                        color: TextColor.withOpacity(.5),
-                                        fontWeight: FontWeight.w800)),
-                              ],
-                            ),
-                            trailing: Container(
-                                 height: height/18.85,
-                           width: width/3.6,
-                              decoration: BoxDecoration(
-                                color: primaryColor,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Padding(
-                                padding:  EdgeInsets.only(top: height/94.25),
-                                child: Text(
-                                  "Register",
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.sofiaSans(
-                                      fontSize: 16,
-                                      color: textColor.withOpacity(.7),
-                                      fontWeight: FontWeight.w800),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                                height: height/75.4,
-                          ),
-                          Padding(
-                            padding:EdgeInsets.only(right: width/2.3),
-                            child: Text(
-                              "Dear Family and Friends,",
-                              style: GoogleFonts.sofiaSans(
-                                  fontSize: 16,
-                                  color: TextColor.withOpacity(.5),
-                                  fontWeight: FontWeight.w800),
-                            ),
-                          ),
-                          SizedBox(
-                                height: height/75.4,
-                          ),
-                          Row(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(left: width/24),
-                                child: Container(
-                                width: width/1.16,
-                                  child: ReadMoreText(
-                                    'We are currently seeking 5 dedicated individuals to join our vibrant team of volunteers. '
-                                    'Whether you’re looking to strengthen your faith, connect with your community,'
-                                    'or simply share your talents, we have a place for you! ',
+                        return ListView.builder(
+                            itemCount: snapshot.data!.docs.length,
+                            itemBuilder: (context,index) {
+                              if(snapshot.hasData) {
+                                var data = snapshot.data!.docs[index];
 
-                                    trimMode: _trimMode,
-                                    trimLines: _trimLines,
-                                    trimLength: _trimLength,
-                                    //isCollapsed: isCollapsed,
-                                    style:
-                                        GoogleFonts.sofiaSans(color: TextColor),
-                                    colorClickableText: primaryColor,
-                                    trimCollapsedText: 'Read more',
-                                    trimExpandedText: ' Less',
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding:  EdgeInsets.only(top: height/15.08),
-                                child: InkWell(
-                                  onTap: () {
-                                    Share.share(
-                                        'check out my website https://example.com',
-                                        subject: 'Look what I made!');
-                                  },
-                                  child: Icon(
-                                    Icons.share,
-                                    color: primaryColor,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Divider(
-                            color: Colors.grey.withOpacity(.3),
-                            endIndent: 10,
-                            indent: 10,
-                          ),
-                          Row(
-                            children: [
-                              SizedBox(
-                                width: width/18,
-                              ),
-                              Container(
-                                 height: height/37.7,
-                                width: width/18,
-                                child: Image.asset("assets/calender.png"),
-                              ),
-                              SizedBox(
-                                width: width/36,
-                              ),
-                              Text(
-                                "March 27, 2024",
-                                style: GoogleFonts.sofiaSans(
-                                    fontSize: 16,
-                                    color: TextColor.withOpacity(.5),
-                                    fontWeight: FontWeight.w800),
-                              ),
-                              SizedBox(
-                                 width: width/5.14,
-                              ),
-                              Container(
-                                 height: height/37.7,
-                                width: width/18,
-                                child: Image.asset("assets/Time.png"),
-                              ),
-                              SizedBox(
-                                width: width/36,
-                              ),
-                              Text(
-                                "03:30 Pm",
-                                style: GoogleFonts.sofiaSans(
-                                    fontSize: 16,
-                                    color: TextColor.withOpacity(.5),
-                                    fontWeight: FontWeight.w800),
-                              ),
-                            ],
-                          ),
-                          ListTile(
-                            leading: Container(
-                              width: width/7.2,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20)),
-                              child: Image.asset("assets/birthday.png"),
-                            ),
-                            title: Text(
-                              "Birthday Party",
-                              style: GoogleFonts.sofiaSans(
-                                  fontSize: 20,
-                                  color: TextColor,
-                                  fontWeight: FontWeight.w800),
-                            ),
-                            subtitle: Row(
-                              children: [
-                                Icon(
-                                  Icons.location_on,
-                                  color: Colors.green,
-                                  size: 15,
-                                ),
-                                Text("Chennai",
-                                    style: GoogleFonts.sofiaSans(
-                                        fontSize: 12,
-                                        color: TextColor.withOpacity(.5),
-                                        fontWeight: FontWeight.w800)),
-                              ],
-                            ),
-                            trailing: Container(
-                                 height: height/18.85,
-                           width: width/3.6,
-                              decoration: BoxDecoration(
-                                color: primaryColor,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Padding(
-                                padding:  EdgeInsets.only(top: height/94.25),
-                                child: Text(
-                                  "Register",
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.sofiaSans(
-                                      fontSize: 16,
-                                      color: textColor.withOpacity(.7),
-                                      fontWeight: FontWeight.w800),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                                height: height/75.4,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(right: width/2.3),
-                            child: Text(
-                              "Dear Family and Friends,",
-                              style: GoogleFonts.sofiaSans(
-                                  fontSize: 16,
-                                  color: TextColor.withOpacity(.5),
-                                  fontWeight: FontWeight.w800),
-                            ),
-                          ),
-                          SizedBox(
-                                height: height/75.4,
-                          ),
-                          Row(
-                            children: [
-                              Padding(
-                                padding:EdgeInsets.only(left: width/24),
-                                child: Container(
-                                width: width/1.16,
-                                  child: ReadMoreText(
-                                    'We are currently seeking 5 dedicated individuals to join our vibrant team of volunteers. '
-                                    'Whether you’re looking to strengthen your faith, connect with your community,'
-                                    'or simply share your talents, we have a place for you! ',
+                                return data["date"] == "${DateTime
+                                    .now()
+                                    .day}/${DateTime
+                                    .now()
+                                    .month}/${DateTime
+                                    .now()
+                                    .year}" ?
+                                Container(
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        height: height/37.7,
+                                      ),
+                                      Row(
+                                        children: [
+                                          SizedBox(
+                                            width: width/18,
+                                          ),
+                                          Container(
+                                            height: height/37.7,
+                                            width: width/18,
+                                            child: Image.asset("assets/calender.png"),
+                                          ),
+                                          SizedBox(
+                                            width: width/36,
+                                          ),
+                                          Text(
+                                            data["date"],
+                                            style: GoogleFonts.sofiaSans(
+                                                fontSize: 16,
+                                                color: TextColor.withOpacity(.5),
+                                                fontWeight: FontWeight.w800),
+                                          ),
+                                          SizedBox(
+                                            width: width/5.14,
+                                          ),
+                                          Container(
+                                            height: height/37.7,
+                                            width: width/18,
+                                            child: Image.asset("assets/Time.png"),
+                                          ),
+                                          SizedBox(
+                                            width: width/36,
+                                          ),
+                                          Text(
+                                            data["time"],
+                                            style: GoogleFonts.sofiaSans(
+                                                fontSize: 16,
+                                                color: TextColor.withOpacity(.5),
+                                                fontWeight: FontWeight.w800),
+                                          ),
+                                        ],
+                                      ),
+                                      ListTile(
+                                        leading: Container(
+                                          width: width/7.2,
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(20)),
+                                          child: Image.network(data["imgUrl"]),
+                                        ),
+                                        title: Text(
+                                          data["title"],
+                                          style: GoogleFonts.sofiaSans(
+                                              fontSize: 20,
+                                              color: TextColor,
+                                              fontWeight: FontWeight.w800),
+                                        ),
+                                        subtitle: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.location_on,
+                                              color: Colors.green,
+                                              size: 15,
+                                            ),
+                                            Text(data["location"],
+                                                style: GoogleFonts.sofiaSans(
+                                                    fontSize: 12,
+                                                    color: TextColor.withOpacity(.5),
+                                                    fontWeight: FontWeight.w800)),
+                                          ],
+                                        ),
+                                        trailing: Container(
+                                          height: height/18.85,
+                                          width: width/3.6,
+                                          decoration: BoxDecoration(
+                                            color: primaryColor,
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                          child: Padding(
+                                            padding: EdgeInsets.only(top: height/94.25),
+                                            child: Text(
+                                              "Register",
+                                              textAlign: TextAlign.center,
+                                              style: GoogleFonts.sofiaSans(
+                                                  fontSize: 16,
+                                                  color: textColor.withOpacity(.7),
+                                                  fontWeight: FontWeight.w800),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: height/75.4,
+                                      ),
+                                 /*     Padding(
+                                        padding: EdgeInsets.only(right: width/2.3),
+                                        child: Text(
+                                          data["date"],
+                                          style: GoogleFonts.sofiaSans(
+                                              fontSize: 16,
+                                              color: TextColor.withOpacity(.5),
+                                              fontWeight: FontWeight.w800),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: height/75.4,
+                                      ),*/
+                                      Row(
+                                        children: [
+                                          Padding(
+                                            padding:EdgeInsets.only(left: width/24),
+                                            child: Container(
+                                              width: width/1.16,
+                                              child: ReadMoreText(
+                                                data["description"],
 
-                                    trimMode: _trimMode,
-                                    trimLines: _trimLines,
-                                    trimLength: _trimLength,
-                                    //isCollapsed: isCollapsed,
-                                    style:
-                                        GoogleFonts.sofiaSans(color: TextColor),
-                                    colorClickableText: primaryColor,
-                                    trimCollapsedText: 'Read more',
-                                    trimExpandedText: ' Less',
+                                                trimMode: _trimMode,
+                                                trimLines: _trimLines,
+                                                trimLength: _trimLength,
+                                                //isCollapsed: isCollapsed,
+                                                style:
+                                                GoogleFonts.sofiaSans(color: TextColor),
+                                                colorClickableText: primaryColor,
+                                                trimCollapsedText: 'Read more',
+                                                trimExpandedText: ' Less',
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding:  EdgeInsets.only(top: height/15.08),
+                                            child: InkWell(
+                                              onTap: () {
+                                                Share.share(
+                                                    'check out my website https://example.com',
+                                                    subject: 'Look what I made!');
+                                              },
+                                              child: Icon(
+                                                Icons.share,
+                                                color: primaryColor,
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      Divider(
+                                        color: Colors.grey.withOpacity(.3),
+                                        endIndent: 10,
+                                        indent: 10,
+                                      ),
+
+                                    ],
                                   ),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: height/15.08),
-                                child: InkWell(
-                                  onTap: () {
-                                    Share.share(
-                                        'check out my website https://example.com',
-                                        subject: 'Look what I made!');
-                                  },
-                                  child: Icon(
-                                    Icons.share,
-                                    color: primaryColor,
+                                ) : SizedBox();
+                              }
+                              return LoadingState();
+                            }
+                        );
+                      },
+                    ) : Nodata(),
+                    upcomming>0?
+                    StreamBuilder(
+                      stream: FirebaseFirestore.instance.collection("Events").orderBy("timestamp",descending: true).snapshots(),
+                      builder: (context,snapshot){
+                        return ListView.builder(
+                            itemCount: snapshot.data!.docs.length,
+                            itemBuilder: (context,index) {
+                              if (snapshot.hasData) {
+                                var data = snapshot.data!.docs[index];
+                                return data["date"] != "${DateTime
+                                    .now()
+                                    .day}/${DateTime
+                                    .now()
+                                    .month}/${DateTime
+                                    .now()
+                                    .year}" ?
+                                Container(
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        height: height/37.7,
+                                      ),
+                                      Row(
+                                        children: [
+                                          SizedBox(
+                                            width: width/18,
+                                          ),
+                                          Container(
+                                            height: height/37.7,
+                                            width: width/18,
+                                            child: Image.asset("assets/calender.png"),
+                                          ),
+                                          SizedBox(
+                                            width: width/36,
+                                          ),
+                                          Text(
+                                            data["date"],
+                                            style: GoogleFonts.sofiaSans(
+                                                fontSize: 16,
+                                                color: TextColor.withOpacity(.5),
+                                                fontWeight: FontWeight.w800),
+                                          ),
+                                          SizedBox(
+                                            width: width/5.14,
+                                          ),
+                                          Container(
+                                            height: height/37.7,
+                                            width: width/18,
+                                            child: Image.asset("assets/Time.png"),
+                                          ),
+                                          SizedBox(
+                                            width: width/36,
+                                          ),
+                                          Text(
+                                            data["time"],
+                                            style: GoogleFonts.sofiaSans(
+                                                fontSize: 16,
+                                                color: TextColor.withOpacity(.5),
+                                                fontWeight: FontWeight.w800),
+                                          ),
+                                        ],
+                                      ),
+                                      ListTile(
+                                        leading: Container(
+                                          width: 60,
+                                          height: 60,
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(60)),
+                                          child: ClipRRect(
+                                              borderRadius: BorderRadius.circular(60),
+                                              child: Image.network(data["imgUrl"],fit: BoxFit.cover,)),
+                                        ),
+                                        title: Text(
+                                          data["title"],
+                                          style: GoogleFonts.sofiaSans(
+                                              fontSize: 20,
+                                              color: TextColor,
+                                              fontWeight: FontWeight.w800),
+                                        ),
+                                        subtitle: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.location_on,
+                                              color: Colors.green,
+                                              size: 15,
+                                            ),
+                                            Text(data["location"],
+                                                style: GoogleFonts.sofiaSans(
+                                                    fontSize: 12,
+                                                    color: TextColor.withOpacity(.5),
+                                                    fontWeight: FontWeight.w800)),
+                                          ],
+                                        ),
+                                        trailing: Container(
+                                          height: height/18.85,
+                                          width: width/3.6,
+                                          decoration: BoxDecoration(
+                                            color: primaryColor,
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                          child: Padding(
+                                            padding: EdgeInsets.only(top: height/94.25),
+                                            child: Text(
+                                              "Register",
+                                              textAlign: TextAlign.center,
+                                              style: GoogleFonts.sofiaSans(
+                                                  fontSize: 16,
+                                                  color: textColor.withOpacity(.7),
+                                                  fontWeight: FontWeight.w800),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: height/75.4,
+                                      ),
+                                      /*     Padding(
+                                        padding: EdgeInsets.only(right: width/2.3),
+                                        child: Text(
+                                          data["date"],
+                                          style: GoogleFonts.sofiaSans(
+                                              fontSize: 16,
+                                              color: TextColor.withOpacity(.5),
+                                              fontWeight: FontWeight.w800),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: height/75.4,
+                                      ),*/
+                                      Row(
+                                        children: [
+                                          Padding(
+                                            padding:EdgeInsets.only(left: width/24),
+                                            child: Container(
+                                              width: width/1.16,
+                                              child: ReadMoreText(
+                                                data["description"],
+
+                                                trimMode: _trimMode,
+                                                trimLines: _trimLines,
+                                                trimLength: _trimLength,
+                                                //isCollapsed: isCollapsed,
+                                                style:
+                                                GoogleFonts.sofiaSans(color: TextColor),
+                                                colorClickableText: primaryColor,
+                                                trimCollapsedText: 'Read more',
+                                                trimExpandedText: ' Less',
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding:  EdgeInsets.only(top: height/15.08),
+                                            child: InkWell(
+                                              onTap: () {
+                                                Share.share(
+                                                    'check out my website https://example.com',
+                                                    subject: 'Look what I made!');
+                                              },
+                                              child: Icon(
+                                                Icons.share,
+                                                color: primaryColor,
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      Divider(
+                                        color: Colors.grey.withOpacity(.3),
+                                        endIndent: 10,
+                                        indent: 10,
+                                      ),
+
+                                    ],
                                   ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: height/25.13,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      color: primaryColor.withOpacity(.2),
-                    )
+                                ): SizedBox();
+                              }
+                              return LoadingState();
+                            }
+                        );
+                      },
+                    )  : Nodata(),
                   ],
                 ),
               ),

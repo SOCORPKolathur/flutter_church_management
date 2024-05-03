@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_church_management/Views/home_page.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:page_transition/page_transition.dart';
 
 import '../constant.dart';
 
@@ -12,6 +14,80 @@ class LanguageScreen extends StatefulWidget {
 }
 
 class _LanguageScreenState extends State<LanguageScreen> {
+
+  List<ChooseLanguageModel> languagesList = [
+    ChooseLanguageModel(
+      name: "Tamil",
+      orgName: "தமிழ்",
+      code: "ta",
+    ),
+    ChooseLanguageModel(
+      name: "English",
+      orgName: "English",
+      code: "en_US",
+    ),
+    ChooseLanguageModel(
+      name: "Hindi",
+      orgName: "हिंदी",
+      code: "hi",
+    ),
+    ChooseLanguageModel(
+      name: "Telugu",
+      orgName: "తెలుగు",
+      code: "te",
+    ),
+    ChooseLanguageModel(
+      name: "Malayalam",
+      orgName: "മലയാളം",
+      code: "ml",
+    ),
+    ChooseLanguageModel(
+      name: "Kannada",
+      orgName: "ಕನ್ನಡ",
+      code: "kn",
+    ),
+    ChooseLanguageModel(
+      name: "Bengali",
+      orgName: "বাংলা",
+      code: "bn",
+    ),
+    ChooseLanguageModel(
+      name: "Spanish",
+      orgName: "Español",
+      code: "es",
+    ),
+    ChooseLanguageModel(
+      name: "Portuguese",
+      orgName: "Português",
+      code: "pt",
+    ),
+    ChooseLanguageModel(
+      name: "French",
+      orgName: "Français",
+      code: "fr",
+    ),
+    ChooseLanguageModel(
+      name: "Dutch",
+      orgName: "Nederlands",
+      code: "nl",
+    ),
+    ChooseLanguageModel(
+      name: "German",
+      orgName: "Deutsch",
+      code: "de",
+    ),
+    ChooseLanguageModel(
+      name: "Italian",
+      orgName: "Italiano",
+      code: "it",
+    ),
+    ChooseLanguageModel(
+      name: "Swedish",
+      orgName: "Svenska",
+      code: "sv",
+    )
+  ];
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -86,8 +162,9 @@ class _LanguageScreenState extends State<LanguageScreen> {
                   children: [
                     InkWell(
                       onTap: () {
-                        // Navigator.of(context).push(MaterialPageRoute(
-                        //     builder: (context) => RolePageScreen()));
+                        changeLocale(context, "ta");
+                        Navigator.pushAndRemoveUntil(context, PageTransition(type: PageTransitionType.scale, child: HomePage(),/*duration: Duration(milliseconds: 1200),reverseDuration: Duration(milliseconds: 500),*/alignment: Alignment.center),(Route<dynamic> route) => false);
+
                       },
                       child: Container(
                         width: width / 2.61,
@@ -129,8 +206,9 @@ class _LanguageScreenState extends State<LanguageScreen> {
                     ),
                     InkWell(
                       onTap: () {
-                        // Navigator.of(context).push(MaterialPageRoute(
-                        //     builder: (context) => RolePageScreen()));
+                        changeLocale(context, "en_US");
+                        Navigator.pushAndRemoveUntil(context, PageTransition(type: PageTransitionType.scale, child: HomePage(),/*duration: Duration(milliseconds: 1200),reverseDuration: Duration(milliseconds: 500),*/alignment: Alignment.center),(Route<dynamic> route) => false);
+
                       },
                       child: Container(
                         width: width / 2.61,
@@ -176,8 +254,9 @@ class _LanguageScreenState extends State<LanguageScreen> {
                   children: [
                     InkWell(
                       onTap: () {
-                        // Navigator.of(context).push(MaterialPageRoute(
-                        //     builder: (context) => RolePageScreen()));
+                        changeLocale(context, "hi");
+                        Navigator.pushAndRemoveUntil(context, PageTransition(type: PageTransitionType.scale, child: HomePage(),/*duration: Duration(milliseconds: 1200),reverseDuration: Duration(milliseconds: 500),*/alignment: Alignment.center),(Route<dynamic> route) => false);
+
                       },
                       child: Container(
                         width: width / 2.61,
@@ -215,8 +294,8 @@ class _LanguageScreenState extends State<LanguageScreen> {
                     ),
                     InkWell(
                       onTap: () {
-                        // Navigator.of(context).push(MaterialPageRoute(
-                        //     builder: (context) => RolePageScreen()));
+                        changeLocale(context, "ml");
+                        Navigator.pushAndRemoveUntil(context, PageTransition(type: PageTransitionType.scale, child: HomePage(),/*duration: Duration(milliseconds: 1200),reverseDuration: Duration(milliseconds: 500),*/alignment: Alignment.center),(Route<dynamic> route) => false);
                       },
                       child: Container(
                         width: width / 2.61,
@@ -264,8 +343,9 @@ class _LanguageScreenState extends State<LanguageScreen> {
                   children: [
                     InkWell(
                       onTap: () {
-                        // Navigator.of(context).push(MaterialPageRoute(
-                        //     builder: (context) => RolePageScreen()));
+                        changeLocale(context, "kn");
+                        Navigator.pushAndRemoveUntil(context, PageTransition(type: PageTransitionType.scale, child: HomePage(),/*duration: Duration(milliseconds: 1200),reverseDuration: Duration(milliseconds: 500),*/alignment: Alignment.center),(Route<dynamic> route) => false);
+
                       },
                       child: Container(
                         width: width / 2.61,
@@ -312,8 +392,9 @@ class _LanguageScreenState extends State<LanguageScreen> {
                     ),
                     InkWell(
                       onTap: () {
-                        // Navigator.of(context).push(MaterialPageRoute(
-                        //     builder: (context) => RolePageScreen()));
+                        changeLocale(context, "te");
+                        Navigator.pushAndRemoveUntil(context, PageTransition(type: PageTransitionType.scale, child: HomePage(),/*duration: Duration(milliseconds: 1200),reverseDuration: Duration(milliseconds: 500),*/alignment: Alignment.center),(Route<dynamic> route) => false);
+
                       },
                       child: Container(
                         width: width / 2.61,
@@ -342,7 +423,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
                                       fontSize: 15,
                                       fontWeight: FontWeight.w700)),
                             ),
-                            Text('Telungu',
+                            Text('Telugu',
                                 style: GoogleFonts.sofiaSans(
                                     color: Colors.black,
                                     fontSize: 15,
@@ -360,8 +441,9 @@ class _LanguageScreenState extends State<LanguageScreen> {
                   children: [
                     InkWell(
                       onTap: () {
-                        // Navigator.of(context).push(MaterialPageRoute(
-                        //     builder: (context) => RolePageScreen()));
+                        changeLocale(context, "bn");
+                        Navigator.pushAndRemoveUntil(context, PageTransition(type: PageTransitionType.scale, child: HomePage(),/*duration: Duration(milliseconds: 1200),reverseDuration: Duration(milliseconds: 500),*/alignment: Alignment.center),(Route<dynamic> route) => false);
+
                       },
                       child: Container(
                         width: width / 2.61,
@@ -384,13 +466,13 @@ class _LanguageScreenState extends State<LanguageScreen> {
                             ),
                             Padding(
                               padding:  EdgeInsets.only(top: height/75.4),
-                              child: Text('ગુજરાત்',
+                              child: Text('বাংলা',
                                   style: GoogleFonts.notoSansGujarati(
                                       color: primaryColor,
                                       fontSize: 15,
                                       fontWeight: FontWeight.w700)),
                             ),
-                            Text('Gujarati',
+                            Text('Bengali',
                                 style: GoogleFonts.sofiaSans(
                                     color: Colors.black,
                                     fontSize: 15,
@@ -402,8 +484,8 @@ class _LanguageScreenState extends State<LanguageScreen> {
                     SizedBox(width: width / 19.6),
                     InkWell(
                       onTap: () {
-                        // Navigator.of(context).push(MaterialPageRoute(
-                        //     builder: (context) => RolePageScreen()));
+                        changeLocale(context, "es");
+                        Navigator.pushAndRemoveUntil(context, PageTransition(type: PageTransitionType.scale, child: HomePage(),/*duration: Duration(milliseconds: 1200),reverseDuration: Duration(milliseconds: 500),*/alignment: Alignment.center),(Route<dynamic> route) => false);
                       },
                       child: Container(
                         width: width / 2.61,
@@ -430,13 +512,13 @@ class _LanguageScreenState extends State<LanguageScreen> {
                             ),
                             Padding(
                               padding:  EdgeInsets.only(top: height/75.4),
-                              child: Text('اردو',
+                              child: Text('Español',
                                   style: GoogleFonts.notoSansUgaritic(
                                       color: primaryColor,
                                       fontSize: 15,
                                       fontWeight: FontWeight.w700)),
                             ),
-                            Text('Urdu',
+                            Text('Spanish',
                                 style: GoogleFonts.sofiaSans(
                                     color: Colors.black,
                                     fontSize: 15,
@@ -457,4 +539,11 @@ class _LanguageScreenState extends State<LanguageScreen> {
       ),
     );
   }
+}
+class ChooseLanguageModel {
+  ChooseLanguageModel({this.name, this.code, this.orgName});
+
+  String? name;
+  String? orgName;
+  String? code;
 }

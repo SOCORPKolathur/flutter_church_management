@@ -1,10 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_church_management/Widgets/loading.dart';
+import 'package:flutter_church_management/Widgets/nodata.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../constant.dart';
 
 class MyPrayer extends StatefulWidget {
-  const MyPrayer({super.key});
+  String phone;
+   MyPrayer({required this.phone});
 
   @override
   State<MyPrayer> createState() => _MyPrayerState();
@@ -217,174 +221,121 @@ class _MyPrayerState extends State<MyPrayer> {
           )
         ],
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding:  EdgeInsets.only(right: width/1.5, top: height/37.7),
-            child: Text(
-              "Prayer 1",
-              style: GoogleFonts.sofiaSans(
-                  fontSize: 20, color: TextColor, fontWeight: FontWeight.w800),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(right: width/2.25, top: height/75.4),
-            child: Text(
-              "Dear Heavenly Father",
-              style: GoogleFonts.sofiaSans(
-                  fontSize: 16,
-                  color: TextColor.withOpacity(.6),
-                  fontWeight: FontWeight.w800),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: width/24, top: height/37.7),
-            child: Container(
-              width: width/1.09,
-              child: Text(
-                "We humbly come before you with our hearts open, seeking your grace and mercy."
-                    " We lift up to you all those who are in need of your comfort, healing, and guidance. ",
-                textAlign: TextAlign.start,
-                style: GoogleFonts.sofiaSans(
-                    fontSize: 16,
-                    color: TextColor.withOpacity(.6),
-                    fontWeight: FontWeight.w800),
-              ),
-            ),
-          ),
-          Row(
-            children: [
-              SizedBox(
-                width: width/36,
-              ),
-              Container(
-                height: height/18.85,
-                child: Image.asset("assets/Loading (1).png"),
-              ),
-              Text("status"),
-              SizedBox(
-                width: width/6,
-              ),
-              Text(":"),
-              SizedBox(
-                width: width/4,
-              ),
-              Container(
-                height: height/30.16,
-                width: width/3.6,
-                decoration: BoxDecoration(
-                    color: Color(0xff00A15B).withOpacity(.2),
-                    borderRadius: BorderRadius.circular(15)),
-                child: Padding(
-                  padding: EdgeInsets.only(top: height/377),
-                  child: Text(
-                    "Approved",
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.sofiaSans(
-                        fontSize: 14,
-                        color: Color(0xff00A15B),
-                        fontWeight: FontWeight.w800),
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection("Prayers").orderBy("timestamp",descending: true).snapshots(),
+        builder: (context, snapshot) {
+          return ListView.builder(
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (context,index) {
+              if(snapshot.data!.docs.length==0){
+                return Nodata();
+              }
+              if(snapshot.hasData) {
+                var data = snapshot.data!.docs[index];
+                return data["phone"] == widget.phone ?Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: width / 30, top: height /
+                            37.7),
+                        child: Text(
+                          data["title"],
+                          style: GoogleFonts.sofiaSans(
+                              fontSize: 20,
+                              color: TextColor,
+                              fontWeight: FontWeight.w800),
+                        ),
+                      ),
+
+                      Padding(
+                        padding: EdgeInsets.only(left: width / 24, top: height /
+                            37.7),
+                        child: Container(
+                          width: width / 1.09,
+                          child: Text(data["description"],
+                            textAlign: TextAlign.start,
+                            style: GoogleFonts.sofiaSans(
+                                fontSize: 16,
+                                color: TextColor.withOpacity(.6),
+                                fontWeight: FontWeight.w800),
+                          ),
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: width / 36,
+                          ),
+                          Container(
+                            height: height / 18.85,
+                            child: Image.asset("assets/Loading (1).png"),
+                          ),
+                          Text("Status"),
+                          SizedBox(
+                            width: width / 6,
+                          ),
+                          Text(":"),
+                          SizedBox(
+                            width: width / 4,
+                          ),
+                          Container(
+                            height: height / 30.16,
+                            width: width / 3.6,
+                            decoration: BoxDecoration(
+                                color: data["status"] == "Approved" ?
+                                Color(0xff00A15B).withOpacity(.2) :
+                                data["status"] == "Denied" ?
+                                Colors.red.withOpacity(.2) :
+                                Colors.orange.withOpacity(.2),
+                                borderRadius: BorderRadius.circular(15)),
+                            child: Padding(
+                              padding: EdgeInsets.only(top: height / 377),
+                              child: Text(
+                                data["status"],
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.sofiaSans(
+                                    fontSize: 14,
+                                    color: data["status"] == "Approved" ?
+                                    Color(0xff00A15B) :
+                                    data["status"] == "Denied" ?
+                                    Colors.red :
+                                    Colors.orange,
+                                    fontWeight: FontWeight.w800),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "You request by ${data['time']} - ${data['date']}",
+                              style: GoogleFonts.sofiaSans(
+                                  fontSize: 14,
+                                  color: TextColor.withOpacity(.4),
+                                  fontWeight: FontWeight.w800),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Divider(
+                        color: TextColor.withOpacity(.1),
+                        endIndent: 10,
+                        indent: 10,
+                      ),
+                    ],
                   ),
-                ),
-              ),
-            ],
-          ),
-          Padding(
-            padding:  EdgeInsets.only(left: width/7.2),
-            child: Text(
-              "You request by 03:30 Pm , March 27, 2024",
-              style: GoogleFonts.sofiaSans(
-                  fontSize: 14,
-                  color: TextColor.withOpacity(.4),
-                  fontWeight: FontWeight.w800),
-            ),
-          ),
-          Divider(
-            color: TextColor.withOpacity(.1),
-            endIndent: 10,
-            indent: 10,
-          ),
-          Padding(
-            padding:  EdgeInsets.only(right: width/1.5, top:height/ 37.7),
-            child: Text(
-              "Prayer 2",
-              style: GoogleFonts.sofiaSans(
-                  fontSize: 20, color: TextColor, fontWeight: FontWeight.w800),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(right: width/2.25, top: height/75.4),
-            child: Text(
-              "Dear Heavenly Father",
-              style: GoogleFonts.sofiaSans(
-                  fontSize: 16,
-                  color: TextColor.withOpacity(.6),
-                  fontWeight: FontWeight.w800),
-            ),
-          ),
-          Padding(
-            padding:  EdgeInsets.only(left: width/24, top: height/37.7),
-            child: Container(
-              width: width/1.09,
-              child: Text(
-                "We humbly come before you with our hearts open, seeking your grace and mercy."
-                    " We lift up to you all those who are in need of your comfort, healing, and guidance.",
-                textAlign: TextAlign.start,
-                style: GoogleFonts.sofiaSans(
-                    fontSize: 16,
-                    color: TextColor.withOpacity(.6),
-                    fontWeight: FontWeight.w800),
-              ),
-            ),
-          ),
-          Row(
-            children: [
-              SizedBox(
-                width: width/36,
-              ),
-              Container(
-                height: height/18.85,
-                child: Image.asset("assets/Loading (1).png"),
-              ),
-              Text("status"),
-              SizedBox(
-                width: width/6,
-              ),
-              Text(":"),
-              SizedBox(
-                width: width/4,
-              ),
-              Container(
-                height: height/30.16,
-                width: width/3.6,
-                decoration: BoxDecoration(
-                    color: Color(0xffFF7345).withOpacity(.2),
-                    borderRadius: BorderRadius.circular(15)),
-                child: Padding(
-                  padding: EdgeInsets.only(top: height/377),
-                  child: Text(
-                    "Pending",
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.sofiaSans(
-                        fontSize: 14,
-                        color: Color(0xffFF7345),
-                        fontWeight: FontWeight.w800),
-                  ),
-                ),
-              )
-            ],
-          ),
-          Padding(
-            padding:  EdgeInsets.only(left: width/7.2),
-            child: Text(
-              "You request by 03:30 Pm , March 27, 2024",
-              style: GoogleFonts.sofiaSans(
-                  fontSize: 14,
-                  color: TextColor.withOpacity(.4),
-                  fontWeight: FontWeight.w800),
-            ),
-          ),
-        ],
+                ) :SizedBox();
+              }
+
+              return LoadingState();
+            }
+          );
+        }
       ),
     );
   }

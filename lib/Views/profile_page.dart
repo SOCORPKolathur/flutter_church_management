@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_church_management/Views/orders.dart';
 import 'package:flutter_church_management/Views/personal_details.dart';
@@ -17,7 +19,29 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
 
+  String userid="";
+  String imgurl="";
+  String email="";
+  String username="User";
+  String phone="User";
+  getuser() async {
+    var document = await FirebaseFirestore.instance.collection('Users').where('id',isEqualTo: FirebaseAuth.instance.currentUser!.uid).get();
+    setState(() {
+      username=document.docs[0]["firstName"];
+      phone=document.docs[0]["phone"];
+      imgurl=document.docs[0]["imgUrl"];
+      email=document.docs[0]["email"];
+      userid=document.docs[0].id;
+    });
 
+  }
+
+  @override
+  void initState() {
+    getuser();
+    // TODO: implement initState
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -54,10 +78,10 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     child: ClipRRect(
                         borderRadius: BorderRadius.circular(20),
-                        child: Image.asset(
-                          "assets/Mask group (15).png",
+                        child: imgurl != ""?Image.network(
+                          imgurl,
                           fit: BoxFit.cover,
-                        )),
+                        ) : Icon(Icons.person,size: 65,color: primaryColor,)),
                   ),
                 ),
               ],
@@ -73,32 +97,35 @@ class _ProfilePageState extends State<ProfilePage> {
                 SizedBox(
                   width: width/36,
                 ),
-                Column(
-                  children: [
-                    Text(
-                      "Christopher",
-                      style: GoogleFonts.sofiaSans(
+                Container(
+                  width: width/2.1,
+                  child: Column(
+                    children: [
+                      Text(
+                        username,
+                        style: GoogleFonts.sofiaSans(
+                            fontWeight: FontWeight.w800,
+                            color: TextColor,
+                            fontSize: 20),
+                      ),
+                      Text(
+                        email,
+                        style: GoogleFonts.sofiaSans(
                           fontWeight: FontWeight.w800,
-                          color: TextColor,
-                          fontSize: 20),
-                    ),
-                    Text(
-                      "ambed2598@gmail.com",
-                      style: GoogleFonts.sofiaSans(
-                        fontWeight: FontWeight.w800,
-                        color: TextColor.withOpacity(.5),
-                        fontSize: 14,
+                          color: TextColor.withOpacity(.5),
+                          fontSize: 14,
+                        ),
                       ),
-                    ),
-                    Text(
-                      "+91 9176463821",
-                      style: GoogleFonts.sofiaSans(
-                        fontWeight: FontWeight.w800,
-                        color: TextColor.withOpacity(.5),
-                        fontSize: 14,
+                      Text(
+                        "+91 ${phone}",
+                        style: GoogleFonts.sofiaSans(
+                          fontWeight: FontWeight.w800,
+                          color: TextColor.withOpacity(.5),
+                          fontSize: 14,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 SizedBox(
                   width: width/36,
@@ -130,7 +157,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 InkWell(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => PersonalDetails()));
+                        builder: (context) => PersonalDetails(docid: phone,)));
                   },
                   child: Container(
                     width:width/1.09,
@@ -168,7 +195,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: InkWell(
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => PersonalDetails()));
+                                builder: (context) => PersonalDetails(docid: phone,)));
                           },
                           child: Container(
                             height: height/15.08,
@@ -211,7 +238,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 InkWell(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => MyPrayer()));
+                        builder: (context) => MyPrayer(phone: phone,)));
                   },
                   child: Container(
                     width:width/1.09,
@@ -249,7 +276,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: InkWell(
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => MyPrayer()));
+                                builder: (context) => MyPrayer(phone: phone,)));
                           },
                           child: Container(
                             height: height/15.08,
@@ -292,7 +319,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 InkWell(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => SpeechScreen()));
+                        builder: (context) => SpeechScreen(phone: phone,)));
                   },
                   child: Container(
                     width:width/1.09,
@@ -330,7 +357,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: InkWell(
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => SpeechScreen()));
+                                builder: (context) => SpeechScreen(phone: phone,)));
                           },
                           child: Container(
                             height: height/15.08,
@@ -454,7 +481,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 InkWell(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => Testimonials()));
+                        builder: (context) => Testimonials(phone: phone,)));
                   },
                   child: Container(
                     width:width/1.09,
@@ -492,7 +519,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: InkWell(
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => Testimonials()));
+                                builder: (context) => Testimonials(phone: phone,)));
                           },
                           child: Container(
                             height: height/15.08,

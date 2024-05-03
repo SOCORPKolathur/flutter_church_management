@@ -1,5 +1,8 @@
 import 'package:buttons_tabbar/buttons_tabbar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_church_management/Widgets/loading.dart';
+import 'package:flutter_church_management/Widgets/nodata.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:readmore/readmore.dart';
 
@@ -17,6 +20,29 @@ class _NoticesState extends State<Notices> {
   var _trimMode = TrimMode.Line;
   int _trimLines = 3;
   int _trimLength = 240;
+
+  int today = 0;
+  int upcomming =0;
+
+
+
+  getdoccount() async {
+    var docu = await FirebaseFirestore.instance.collection("Notices").where("date",isEqualTo: "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}").get();
+    var docu2 = await FirebaseFirestore.instance.collection("Notices").where("date",isNotEqualTo: "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}").get();
+    setState(() {
+      today = docu.docs.length;
+      upcomming = docu2.docs.length;
+    });
+
+  }
+
+  @override
+  void initState() {
+    getdoccount();
+    // TODO: implement initState
+
+  }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -85,11 +111,11 @@ class _NoticesState extends State<Notices> {
                       child: Padding(
                         padding: EdgeInsets.only(top: height / 75.4),
                         child: Text(
-                          "Upcomings",
+                          "All Notices",
                           textAlign: TextAlign.center,
                           style: GoogleFonts.sofiaSans(
                               fontSize: 16,
-                              color: obj == "Upcomings"
+                              color: obj == "All Notices"
                                   ? textColor
                                   : TextColor.withOpacity(.4),
                               fontWeight: FontWeight.w800),
@@ -102,226 +128,163 @@ class _NoticesState extends State<Notices> {
               Expanded(
                 child: TabBarView(
                   children: <Widget>[
-                    SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: height / 37.7,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(right: width / 2),
-                            child: Text(
-                              "Volunteer Need",
-                              style: GoogleFonts.sofiaSans(
-                                  fontSize: 20,
-                                  color: primaryColor,
-                                  fontWeight: FontWeight.w800),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(left: width / 18),
-                            child: ReadMoreText(
-                              'We are currently seeking 5 dedicated individuals to join our vibrant team of volunteers. '
-                              'Whether you’re looking to strengthen your faith, connect with your community, '
-                              'or simply share your talents, we have a place for you! ',
-                              trimMode: _trimMode,
-                              trimLines: _trimLines,
-                              trimLength: _trimLength,
-                              //isCollapsed: isCollapsed,
-                              style: GoogleFonts.sofiaSans(color: TextColor),
-                              colorClickableText: primaryColor,
-                              trimCollapsedText: 'Read more',
-                              trimExpandedText: ' Less',
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                                left: width / 3.6, top: height / 75.4),
-                            child: Text(
-                              "Post by 03:30 Pm,March 27, 2024",
-                              style: GoogleFonts.sofiaSans(
-                                  fontSize: 14,
-                                  color: Color(0xFF262626).withOpacity(.7),
-                                  fontWeight: FontWeight.w800),
-                            ),
-                          ),
-                          Divider(
-                            color: Color(0xFF262626).withOpacity(.2),
-                            endIndent: 15,
-                            indent: 15,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(right: width / 2),
-                            child: Text(
-                              "Volunteer Need",
-                              style: GoogleFonts.sofiaSans(
-                                  fontSize: 20,
-                                  color: primaryColor,
-                                  fontWeight: FontWeight.w800),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(left: width / 18),
-                            child: ReadMoreText(
-                              'We are currently seeking 5 dedicated individuals to join our vibrant team of volunteers. '
-                              'Whether you’re looking to strengthen your faith, connect with your community, '
-                              'or simply share your talents, we have a place for you! ',
-                              trimMode: _trimMode,
-                              trimLines: _trimLines,
-                              trimLength: _trimLength,
-                              //isCollapsed: isCollapsed,
-                              style: GoogleFonts.sofiaSans(color: TextColor),
-                              colorClickableText: primaryColor,
-                              trimCollapsedText: 'Read more',
-                              trimExpandedText: ' Less',
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                                left: width / 3.6, top: height / 75.4),
-                            child: Text(
-                              "Post by 03:30 Pm,March 27, 2024",
-                              style: GoogleFonts.sofiaSans(
-                                  fontSize: 14,
-                                  color: Color(0xFF262626).withOpacity(.7),
-                                  fontWeight: FontWeight.w800),
-                            ),
-                          ),
-                          Divider(
-                            color: Color(0xFF262626).withOpacity(.2),
-                            endIndent: 15,
-                            indent: 15,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(right: width / 2),
-                            child: Text(
-                              "Volunteer Need",
-                              style: GoogleFonts.sofiaSans(
-                                  fontSize: 20,
-                                  color: primaryColor,
-                                  fontWeight: FontWeight.w800),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(left: width / 18),
-                            child: ReadMoreText(
-                              'We are currently seeking 5 dedicated individuals to join our vibrant team of volunteers. '
-                              'Whether you’re looking to strengthen your faith, connect with your community, '
-                              'or simply share your talents, we have a place for you! ',
-                              trimMode: _trimMode,
-                              trimLines: _trimLines,
-                              trimLength: _trimLength,
-                              //isCollapsed: isCollapsed,
-                              style: GoogleFonts.sofiaSans(color: TextColor),
-                              colorClickableText: primaryColor,
-                              trimCollapsedText: 'Read more',
-                              trimExpandedText: ' Less',
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                                left: width / 3.6, top: height / 75.4),
-                            child: Text(
-                              "Post by 03:30 Pm,March 27, 2024",
-                              style: GoogleFonts.sofiaSans(
-                                  fontSize: 14,
-                                  color: Color(0xFF262626).withOpacity(.7),
-                                  fontWeight: FontWeight.w800),
-                            ),
-                          ),
-                          Divider(
-                            color: Color(0xFF262626).withOpacity(.2),
-                            endIndent: 15,
-                            indent: 15,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(right: width / 2),
-                            child: Text(
-                              "Volunteer Need",
-                              style: GoogleFonts.sofiaSans(
-                                  fontSize: 20,
-                                  color: primaryColor,
-                                  fontWeight: FontWeight.w800),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(left: width / 18),
-                            child: ReadMoreText(
-                              'We are currently seeking 5 dedicated individuals to join our vibrant team of volunteers. '
-                              'Whether you’re looking to strengthen your faith, connect with your community, '
-                              'or simply share your talents, we have a place for you! ',
-                              trimMode: _trimMode,
-                              trimLines: _trimLines,
-                              trimLength: _trimLength,
-                              //isCollapsed: isCollapsed,
-                              style: GoogleFonts.sofiaSans(color: TextColor),
-                              colorClickableText: primaryColor,
-                              trimCollapsedText: 'Read more',
-                              trimExpandedText: ' Less',
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                                left: width / 3.6, top: height / 75.4),
-                            child: Text(
-                              "Post by 03:30 Pm,March 27, 2024",
-                              style: GoogleFonts.sofiaSans(
-                                  fontSize: 14,
-                                  color: Color(0xFF262626).withOpacity(.7),
-                                  fontWeight: FontWeight.w800),
-                            ),
-                          ),
-                          Divider(
-                            color: Color(0xFF262626).withOpacity(.2),
-                            endIndent: 15,
-                            indent: 15,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(right: width / 2),
-                            child: Text(
-                              "Volunteer Need",
-                              style: GoogleFonts.sofiaSans(
-                                  fontSize: 20,
-                                  color: primaryColor,
-                                  fontWeight: FontWeight.w800),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(left: width / 18),
-                            child: ReadMoreText(
-                              'We are currently seeking 5 dedicated individuals to join our vibrant team of volunteers. '
-                              'Whether you’re looking to strengthen your faith, connect with your community, '
-                              'or simply share your talents, we have a place for you! ',
-                              trimMode: _trimMode,
-                              trimLines: _trimLines,
-                              trimLength: _trimLength,
-                              //isCollapsed: isCollapsed,
-                              style: GoogleFonts.sofiaSans(color: TextColor),
-                              colorClickableText: primaryColor,
-                              trimCollapsedText: 'Read more',
-                              trimExpandedText: ' Less',
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                                left: width / 3.6, top: height / 75.4),
-                            child: Text(
-                              "Post by 03:30 Pm,March 27, 2024",
-                              style: GoogleFonts.sofiaSans(
-                                  fontSize: 14,
-                                  color: Color(0xFF262626).withOpacity(.7),
-                                  fontWeight: FontWeight.w800),
-                            ),
-                          ),
-                          SizedBox(
-                            height: height / 25.13,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      color: primaryColor.withOpacity(.2),
-                    ),
+                    today>0?
+                   StreamBuilder(
+                     stream: FirebaseFirestore.instance.collection("Notices").orderBy("timestamp",descending: true).snapshots(),
+                     builder: (context,snapshot){
+
+                       return ListView.builder(
+                         itemCount: snapshot.data!.docs.length,
+                         itemBuilder: (context,index) {
+                           if(snapshot.hasData) {
+                             var data = snapshot.data!.docs[index];
+
+                             return data["date"] == "${DateTime
+                                 .now()
+                                 .day}/${DateTime
+                                 .now()
+                                 .month}/${DateTime
+                                 .now()
+                                 .year}" ? Container(
+                               child: Column(
+                                 children: [
+                                   SizedBox(
+                                     height: height / 37.7,
+                                   ),
+                                   Padding(
+                                     padding: EdgeInsets.only(right: width / 2),
+                                     child: Text(
+                                       data["title"],
+                                       style: GoogleFonts.sofiaSans(
+                                           fontSize: 20,
+                                           color: primaryColor,
+                                           fontWeight: FontWeight.w800),
+                                     ),
+                                   ),
+                                   Padding(
+                                     padding: EdgeInsets.only(left: width / 18),
+                                     child: ReadMoreText(
+                                       data["description"],
+                                       trimMode: _trimMode,
+                                       trimLines: _trimLines,
+                                       trimLength: _trimLength,
+                                       //isCollapsed: isCollapsed,
+                                       style: GoogleFonts.sofiaSans(
+                                           color: TextColor),
+                                       colorClickableText: primaryColor,
+                                       trimCollapsedText: 'Read more',
+                                       trimExpandedText: ' Less',
+                                     ),
+                                   ),
+                                   Padding(
+                                     padding: EdgeInsets.only(
+                                         left: width / 3.6, top: height / 75.4),
+                                     child: Text(
+                                       "Posted at ${data["time"]} - ${data["date"]}",
+                                       style: GoogleFonts.sofiaSans(
+                                           fontSize: 14,
+                                           color: Color(0xFF262626).withOpacity(
+                                               .7),
+                                           fontWeight: FontWeight.w800),
+                                     ),
+                                   ),
+                                   Divider(
+                                     color: Color(0xFF262626).withOpacity(.2),
+                                     endIndent: 15,
+                                     indent: 15,
+                                   ),
+
+
+                                 ],
+                               ),
+                             ) : SizedBox();
+                           }
+                           return LoadingState();
+                         }
+                       );
+                     },
+                   ) : Nodata(),
+                    upcomming>0?
+                    StreamBuilder(
+                      stream: FirebaseFirestore.instance.collection("Notices").orderBy("timestamp",descending: true).snapshots(),
+                      builder: (context,snapshot){
+                        return ListView.builder(
+                            itemCount: snapshot.data!.docs.length,
+                            itemBuilder: (context,index) {
+                              if (snapshot.hasData) {
+                                var data = snapshot.data!.docs[index];
+                                return data["date"] != "${DateTime
+                                    .now()
+                                    .day}/${DateTime
+                                    .now()
+                                    .month}/${DateTime
+                                    .now()
+                                    .year}" ?
+                                Container(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment
+                                        .start,
+                                    children: [
+                                      SizedBox(
+                                        height: height / 37.7,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            left: width / 18),
+                                        child: Text(
+                                          data["title"],
+                                          style: GoogleFonts.sofiaSans(
+                                              fontSize: 20,
+                                              color: primaryColor,
+                                              fontWeight: FontWeight.w800),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            left: width / 18),
+                                        child: ReadMoreText(
+                                          data["description"],
+                                          trimMode: _trimMode,
+                                          trimLines: _trimLines,
+                                          trimLength: _trimLength,
+                                          //isCollapsed: isCollapsed,
+                                          style: GoogleFonts.sofiaSans(
+                                              color: TextColor),
+                                          colorClickableText: primaryColor,
+                                          trimCollapsedText: 'Read more',
+                                          trimExpandedText: ' Less',
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            left: width / 2.6,
+                                            top: height / 75.4),
+                                        child: Text(
+                                          "Posted at ${data["time"]} - ${data["date"]}",
+                                          style: GoogleFonts.sofiaSans(
+                                              fontSize: 14,
+                                              color: Color(0xFF262626)
+                                                  .withOpacity(.7),
+                                              fontWeight: FontWeight.w800),
+                                        ),
+                                      ),
+                                      Divider(
+                                        color: Color(0xFF262626).withOpacity(
+                                            .2),
+                                        endIndent: 15,
+                                        indent: 15,
+                                      ),
+
+
+                                    ],
+                                  ),
+                                ) : SizedBox();
+                              }
+                              return LoadingState();
+                            }
+                        );
+                      },
+                    )  : Nodata(),
                   ],
                 ),
               ),
