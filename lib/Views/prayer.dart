@@ -1,20 +1,28 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_church_management/Widgets/loading.dart';
 import 'package:flutter_church_management/Widgets/nodata.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:intl/intl.dart';
 import '../constant.dart';
 
 class MyPrayer extends StatefulWidget {
   String phone;
-   MyPrayer({required this.phone});
+  String firstname;
+  String lastname;
+   MyPrayer({required this.phone,required this.firstname,required this.lastname});
 
   @override
   State<MyPrayer> createState() => _MyPrayerState();
 }
 
 class _MyPrayerState extends State<MyPrayer> {
+
+  TextEditingController title = new TextEditingController();
+  TextEditingController description = new TextEditingController();
+
   _showAlertDialogOne() {
     return showDialog<void>(
       context: context,
@@ -65,6 +73,8 @@ class _MyPrayerState extends State<MyPrayer> {
                     ),
                   ),
                   child: TextField(
+                    controller: title,
+
                     decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: '',
@@ -98,6 +108,7 @@ class _MyPrayerState extends State<MyPrayer> {
                   ),
                   child: TextField(
                     maxLines: 3,
+                      controller: description,
                     decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: '',
@@ -120,8 +131,7 @@ class _MyPrayerState extends State<MyPrayer> {
                         decoration: BoxDecoration(
                             color: Color(0xffFF2020),
                             borderRadius: BorderRadius.circular(10)),
-                        child: Padding(
-                          padding:  EdgeInsets.only(top: height/94.25),
+                        child: Center(
                           child: Text(
                             'Cancel',
                             style: GoogleFonts.sofiaSans(
@@ -135,20 +145,52 @@ class _MyPrayerState extends State<MyPrayer> {
                     SizedBox(
                       width: width/36,
                     ),
-                    Container(
-                      height:height/18.85,
-                      width: width/2.76,
-                      decoration: BoxDecoration(
-                          color: Color(0xff00A05A),
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Padding(
-                        padding:  EdgeInsets.only(top: height/94.25),
-                        child: Text(
-                          'Submit',
-                          style: GoogleFonts.sofiaSans(
-                            color: textColor,
+                    InkWell(
+                      onTap: (){
+                        if (title.text != "" && description.text != "") {
+                          String docId = getRandomString(16);
+                          FirebaseFirestore.instance.collection('Prayers').doc(docId).set(
+                              {
+                                "id" : docId,
+                                "date" : DateFormat('dd-MM-yyyy').format(DateTime.now()),
+                                "time" : DateFormat('hh:mm a').format(DateTime.now()),
+                                "title" : title.text,
+                                "description" : description.text,
+                                "timestamp" : DateTime.now().millisecondsSinceEpoch,
+                                "status" : "Pending",
+                                "requestedBy": "${widget.firstname} ${widget.lastname}",
+                                "phone" : widget.phone
+                              }
+                          ).whenComplete(() async {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Prayer requested successfully")));
+                            setState(() {
+                              description.text = "";
+                              title.text = "";
+                            });
+                            Navigator.pop(context);
+                          }).catchError((e) async {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Failed to create Prayer request")));
+
+                          });
+                        }
+                        else{
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Prayer tile and description cannot be empty")));
+                        }
+                      },
+                      child: Container(
+                        height:height/18.85,
+                        width: width/2.76,
+                        decoration: BoxDecoration(
+                            color: Color(0xff00A05A),
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Center(
+                          child: Text(
+                            'Submit',
+                            style: GoogleFonts.sofiaSans(
+                              color: textColor,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
                         ),
                       ),
                     ),
@@ -162,6 +204,10 @@ class _MyPrayerState extends State<MyPrayer> {
     );
   }
 
+  String _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  Random _rnd = Random();
+  String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
+      length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -186,36 +232,37 @@ class _MyPrayerState extends State<MyPrayer> {
         actions: [
           Padding(
             padding: EdgeInsets.only(right: width/36),
-            child: Container(
-              height: height/18.85,
-              width: width/3.87,
-              decoration: BoxDecoration(
-                color: textColor,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: width/36),
-                    child: Text(
-                      "Add",
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.sofiaSans(
-                          fontSize: 20,
-                          color: primaryColor,
-                          fontWeight: FontWeight.w800),
+            child: InkWell(
+              onTap: (){
+                _showAlertDialogOne();
+              },
+              child: Container(
+                height: height/18.85,
+                width: width/3.87,
+                decoration: BoxDecoration(
+                  color: textColor,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: width/36),
+                      child: Text(
+                        "Add",
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.sofiaSans(
+                            fontSize: 20,
+                            color: primaryColor,
+                            fontWeight: FontWeight.w800),
+                      ),
                     ),
-                  ),
-                  IconButton(
-                      onPressed: () {
-                        _showAlertDialogOne();
-                      },
-                      icon: Icon(
-                        Icons.add,
-                        size: 25,
-                        color: primaryColor,
-                      )),
-                ],
+                    Icon(
+                          Icons.add,
+                          size: 25,
+                          color: primaryColor,
+                        ),
+                  ],
+                ),
               ),
             ),
           )

@@ -23,11 +23,13 @@ class _ProfilePageState extends State<ProfilePage> {
   String imgurl="";
   String email="";
   String username="User";
+  String lastname="User";
   String phone="User";
   getuser() async {
     var document = await FirebaseFirestore.instance.collection('Users').where('id',isEqualTo: FirebaseAuth.instance.currentUser!.uid).get();
     setState(() {
       username=document.docs[0]["firstName"];
+      lastname=document.docs[0]["lastName"];
       phone=document.docs[0]["phone"];
       imgurl=document.docs[0]["imgUrl"];
       email=document.docs[0]["email"];
@@ -238,7 +240,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 InkWell(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => MyPrayer(phone: phone,)));
+                        builder: (context) => MyPrayer(phone: phone,firstname: username,lastname: lastname,)));
                   },
                   child: Container(
                     width:width/1.09,
@@ -276,7 +278,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: InkWell(
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => MyPrayer(phone: phone,)));
+                                builder: (context) => MyPrayer(phone: phone,firstname: username,lastname: lastname,)));
                           },
                           child: Container(
                             height: height/15.08,
@@ -481,7 +483,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 InkWell(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => Testimonials(phone: phone,)));
+                        builder: (context) => Testimonials(phone: phone,firstname: username,lastname: lastname,)));
                   },
                   child: Container(
                     width:width/1.09,
@@ -519,7 +521,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: InkWell(
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => Testimonials(phone: phone,)));
+                                builder: (context) => Testimonials(phone: phone,firstname: username,lastname: lastname,)));
                           },
                           child: Container(
                             height: height/15.08,

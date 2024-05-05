@@ -1,1 +1,11 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"church-management-cbf7d","appId":"1:804008888688:android:bd090dfdc59dae237a67b5","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"church-management-cbf7d","configurations":{"android":"1:804008888688:android:bd090dfdc59dae237a67b5","ios":"1:804008888688:ios:9697ba392ee24ea07a67b5","web":"1:804008888688:web:403c87e94bdc086f7a67b5"}}}}}}
+{
+  "hosting": {
+    "public": "build/web",
+    "site": "ikiacmsapp",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}
