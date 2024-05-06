@@ -5,11 +5,14 @@ import 'package:flutter_church_management/Widgets/loading.dart';
 import 'package:flutter_church_management/Widgets/nodata.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:readmore/readmore.dart';
-
+import 'package:visibility_detector/visibility_detector.dart';
 import '../constant.dart';
+import 'package:intl/intl.dart';
+
 
 class Notices extends StatefulWidget {
-  const Notices({super.key});
+  String userphone;
+   Notices({required this.userphone});
 
   @override
   State<Notices> createState() => _NoticesState();
@@ -27,8 +30,8 @@ class _NoticesState extends State<Notices> {
 
 
   getdoccount() async {
-    var docu = await FirebaseFirestore.instance.collection("Notices").where("date",isEqualTo: "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}").get();
-    var docu2 = await FirebaseFirestore.instance.collection("Notices").where("date",isNotEqualTo: "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}").get();
+    var docu = await FirebaseFirestore.instance.collection("Notices").where("date",isEqualTo: DateFormat('dd/MM/yyyy').format(DateTime.now())).get();
+    var docu2 = await FirebaseFirestore.instance.collection("Notices").where("date",isNotEqualTo: DateFormat('dd/MM/yyyy').format(DateTime.now())).get();
     setState(() {
       today = docu.docs.length;
       upcomming = docu2.docs.length;
@@ -39,8 +42,20 @@ class _NoticesState extends State<Notices> {
   @override
   void initState() {
     getdoccount();
+    print(DateFormat('dd/MM/yyyy').format(DateTime.now()));
     // TODO: implement initState
 
+  }
+  setview() async {
+    int temp=0;
+    var docu = await FirebaseFirestore.instance.collection("Notices").where("date",isEqualTo: DateFormat('dd/MM/yyyy').format(DateTime.now())).get();
+    temp = docu.docs.length<5?docu.docs.length : 5;
+    for(int i=0;i<temp;i++){
+      FirebaseFirestore.instance.collection("Notices").doc(docu.docs[i].id).update(
+          {
+            "views":FieldValue.arrayUnion([widget.userphone]),
+          });
+    }
   }
 
   @override
@@ -139,63 +154,79 @@ class _NoticesState extends State<Notices> {
                            if(snapshot.hasData) {
                              var data = snapshot.data!.docs[index];
 
-                             return data["date"] == "${DateTime
-                                 .now()
-                                 .day}/${DateTime
-                                 .now()
-                                 .month}/${DateTime
-                                 .now()
-                                 .year}" ? Container(
-                               child: Column(
-                                 children: [
-                                   SizedBox(
-                                     height: height / 37.7,
-                                   ),
-                                   Padding(
-                                     padding: EdgeInsets.only(right: width / 2),
-                                     child: Text(
-                                       data["title"],
-                                       style: GoogleFonts.sofiaSans(
-                                           fontSize: 20,
-                                           color: primaryColor,
-                                           fontWeight: FontWeight.w800),
+                             return data["date"] == DateFormat('dd/MM/yyyy').format(DateTime.now()).toString() ?
+                             VisibilityDetector(
+                               key: Key('my-widget-key2 $index'),
+                               onVisibilityChanged: (VisibilityInfo visibilityInfo){
+                                 var visiblePercentage = visibilityInfo.visibleFraction;
+
+                                 if(visiblePercentage>0.50){
+
+                                   FirebaseFirestore.instance.collection("Notices").doc(data.id).update(
+                                       {
+                                         "views":FieldValue.arrayUnion([widget.userphone]),
+                                       }
+                                   );
+                                 }
+                               },
+                               child:  Container(
+                                 child: Column(
+                                   crossAxisAlignment: CrossAxisAlignment
+                                       .start,
+                                   children: [
+                                     SizedBox(
+                                       height: height / 37.7,
                                      ),
-                                   ),
-                                   Padding(
-                                     padding: EdgeInsets.only(left: width / 18),
-                                     child: ReadMoreText(
-                                       data["description"],
-                                       trimMode: _trimMode,
-                                       trimLines: _trimLines,
-                                       trimLength: _trimLength,
-                                       //isCollapsed: isCollapsed,
-                                       style: GoogleFonts.sofiaSans(
-                                           color: TextColor),
-                                       colorClickableText: primaryColor,
-                                       trimCollapsedText: 'Read more',
-                                       trimExpandedText: ' Less',
+                                     Padding(
+                                       padding: EdgeInsets.only(
+                                           left: width / 18),
+                                       child: Text(
+                                         data["title"],
+                                         style: GoogleFonts.sofiaSans(
+                                             fontSize: 20,
+                                             color: primaryColor,
+                                             fontWeight: FontWeight.w800),
+                                       ),
                                      ),
-                                   ),
-                                   Padding(
-                                     padding: EdgeInsets.only(
-                                         left: width / 3.6, top: height / 75.4),
-                                     child: Text(
-                                       "Posted at ${data["time"]} - ${data["date"]}",
-                                       style: GoogleFonts.sofiaSans(
-                                           fontSize: 14,
-                                           color: Color(0xFF262626).withOpacity(
-                                               .7),
-                                           fontWeight: FontWeight.w800),
+                                     Padding(
+                                       padding: EdgeInsets.only(
+                                           left: width / 18),
+                                       child: ReadMoreText(
+                                         data["description"],
+                                         trimMode: _trimMode,
+                                         trimLines: _trimLines,
+                                         trimLength: _trimLength,
+                                         //isCollapsed: isCollapsed,
+                                         style: GoogleFonts.sofiaSans(
+                                             color: TextColor),
+                                         colorClickableText: primaryColor,
+                                         trimCollapsedText: 'Read more',
+                                         trimExpandedText: ' Less',
+                                       ),
                                      ),
-                                   ),
-                                   Divider(
-                                     color: Color(0xFF262626).withOpacity(.2),
-                                     endIndent: 15,
-                                     indent: 15,
-                                   ),
+                                     Padding(
+                                       padding: EdgeInsets.only(
+                                           left: width / 2.6,
+                                           top: height / 75.4),
+                                       child: Text(
+                                         "Posted at ${data["time"]} - ${data["date"]}",
+                                         style: GoogleFonts.sofiaSans(
+                                             fontSize: 14,
+                                             color: Color(0xFF262626)
+                                                 .withOpacity(.7),
+                                             fontWeight: FontWeight.w800),
+                                       ),
+                                     ),
+                                     Divider(
+                                       color: Color(0xFF262626).withOpacity(
+                                           .2),
+                                       endIndent: 15,
+                                       indent: 15,
+                                     ),
 
 
-                                 ],
+                                   ],
+                                 ),
                                ),
                              ) : SizedBox();
                            }
@@ -213,70 +244,77 @@ class _NoticesState extends State<Notices> {
                             itemBuilder: (context,index) {
                               if (snapshot.hasData) {
                                 var data = snapshot.data!.docs[index];
-                                return data["date"] != "${DateTime
-                                    .now()
-                                    .day}/${DateTime
-                                    .now()
-                                    .month}/${DateTime
-                                    .now()
-                                    .year}" ?
-                                Container(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .start,
-                                    children: [
-                                      SizedBox(
-                                        height: height / 37.7,
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                            left: width / 18),
-                                        child: Text(
-                                          data["title"],
-                                          style: GoogleFonts.sofiaSans(
-                                              fontSize: 20,
-                                              color: primaryColor,
-                                              fontWeight: FontWeight.w800),
+                                return data["date"] != DateFormat('dd/MM/yyyy').format(DateTime.now()) ?
+                                VisibilityDetector(
+                                  key: Key('my-widget-key2 $index'),
+                                  onVisibilityChanged: (VisibilityInfo visibilityInfo){
+                                    var visiblePercentage = visibilityInfo.visibleFraction;
+                                    if(visiblePercentage>0.50)
+                                      print(data["title"]);
+                                      FirebaseFirestore.instance.collection("Notices").doc(data.id).update(
+                                          {
+                                            "views":FieldValue.arrayUnion([widget.userphone]),
+                                          }
+                                      );
+                                  },
+                                  child: Container(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment
+                                          .start,
+                                      children: [
+                                        SizedBox(
+                                          height: height / 37.7,
                                         ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                            left: width / 18),
-                                        child: ReadMoreText(
-                                          data["description"],
-                                          trimMode: _trimMode,
-                                          trimLines: _trimLines,
-                                          trimLength: _trimLength,
-                                          //isCollapsed: isCollapsed,
-                                          style: GoogleFonts.sofiaSans(
-                                              color: TextColor),
-                                          colorClickableText: primaryColor,
-                                          trimCollapsedText: 'Read more',
-                                          trimExpandedText: ' Less',
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              left: width / 18),
+                                          child: Text(
+                                            data["title"],
+                                            style: GoogleFonts.sofiaSans(
+                                                fontSize: 20,
+                                                color: primaryColor,
+                                                fontWeight: FontWeight.w800),
+                                          ),
                                         ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                            left: width / 2.6,
-                                            top: height / 75.4),
-                                        child: Text(
-                                          "Posted at ${data["time"]} - ${data["date"]}",
-                                          style: GoogleFonts.sofiaSans(
-                                              fontSize: 14,
-                                              color: Color(0xFF262626)
-                                                  .withOpacity(.7),
-                                              fontWeight: FontWeight.w800),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              left: width / 18),
+                                          child: ReadMoreText(
+                                            data["description"],
+                                            trimMode: _trimMode,
+                                            trimLines: _trimLines,
+                                            trimLength: _trimLength,
+                                            //isCollapsed: isCollapsed,
+                                            style: GoogleFonts.sofiaSans(
+                                                color: TextColor),
+                                            colorClickableText: primaryColor,
+                                            trimCollapsedText: 'Read more',
+                                            trimExpandedText: ' Less',
+                                          ),
                                         ),
-                                      ),
-                                      Divider(
-                                        color: Color(0xFF262626).withOpacity(
-                                            .2),
-                                        endIndent: 15,
-                                        indent: 15,
-                                      ),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              left: width / 2.6,
+                                              top: height / 75.4),
+                                          child: Text(
+                                            "Posted at ${data["time"]} - ${data["date"]}",
+                                            style: GoogleFonts.sofiaSans(
+                                                fontSize: 14,
+                                                color: Color(0xFF262626)
+                                                    .withOpacity(.7),
+                                                fontWeight: FontWeight.w800),
+                                          ),
+                                        ),
+                                        Divider(
+                                          color: Color(0xFF262626).withOpacity(
+                                              .2),
+                                          endIndent: 15,
+                                          indent: 15,
+                                        ),
 
 
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ) : SizedBox();
                               }

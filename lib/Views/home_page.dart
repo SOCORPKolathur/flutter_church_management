@@ -67,11 +67,13 @@ class _HomePageState extends State<HomePage> {
   }
   String userid="";
   String username="User";
+  String userphone="User";
   getuser() async {
     var document = await FirebaseFirestore.instance.collection('Users').where('id',isEqualTo: FirebaseAuth.instance.currentUser!.uid).get();
     setState(() {
       username=document.docs[0]["firstName"];
       userid=document.docs[0]["id"];
+      userphone=document.docs[0]["phone"];
     });
 
   }
@@ -88,8 +90,6 @@ class _HomePageState extends State<HomePage> {
         onPageChanged: (val) {
           setState(() {
             _currentIndex = val;
-            _pageController.animateToPage(_currentIndex,
-                duration: Duration(milliseconds: 300), curve: Curves.easeIn);
           });
         },
         children: [
@@ -320,7 +320,7 @@ class _HomePageState extends State<HomePage> {
                           child: InkWell(
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => Notices()));
+                                  builder: (context) => Notices(userphone: userphone,)));
                             },
                             child: Stack(
                               children: [
@@ -380,6 +380,45 @@ class _HomePageState extends State<HomePage> {
                                     child: Image.asset("assets/notice.png"),
                                   ),
                                 ),
+                                StreamBuilder(
+                                  stream: FirebaseFirestore.instance.collection("Notices").snapshots(),
+                                  builder: (context, snapshot) {
+                                    if(snapshot.hasData) {
+                                      int count = snapshot.data!.docs.where((doc) {
+                                        List<dynamic> array = doc['views'];
+                                        return !array.contains(userphone);
+                                      }).length;
+                                      if(count!=0) {
+                                        return Padding(
+                                          padding: EdgeInsets.only(
+                                              left: width / 9,
+                                              top: height / 45.4),
+                                          child: Container(
+                                            width: 22,
+                                            height: 22,
+                                            decoration: BoxDecoration(
+                                                color: Colors.red,
+                                                borderRadius: BorderRadius
+                                                    .circular(50)
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                count
+                                                    .toString().padLeft(2, "0"),
+                                                style: GoogleFonts.sofiaSans(
+                                                  color: textColor,
+                                                  fontSize: 11,
+                                                  fontWeight: FontWeight.bold,
+                                                ),),
+                                            ),
+
+                                          ),
+                                        );
+                                      }
+                                    }
+                                    return Container();
+                                  }
+                                ),
                               ],
                             ),
                           ),
@@ -390,7 +429,7 @@ class _HomePageState extends State<HomePage> {
                         InkWell(
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => EventsScreen()));
+                                builder: (context) => EventsScreen(userphone: userphone,)));
                           },
                           child: Stack(
                             children: [
@@ -451,6 +490,45 @@ class _HomePageState extends State<HomePage> {
                                   child: Image.asset("assets/event.png"),
                                 ),
                               ),
+                               StreamBuilder(
+                                  stream: FirebaseFirestore.instance.collection("Events").snapshots(),
+                                  builder: (context, snapshot) {
+                                    if(snapshot.hasData) {
+                                      int count = snapshot.data!.docs.where((doc) {
+                                        List<dynamic> array = doc['views'];
+                                        return !array.contains(userphone);
+                                      }).length;
+                                      if(count!=0) {
+                                        return Padding(
+                                          padding: EdgeInsets.only(
+                                              left: width / 9,
+                                              top: height / 45.4),
+                                          child: Container(
+                                            width: 22,
+                                            height: 22,
+                                            decoration: BoxDecoration(
+                                                color: Colors.red,
+                                                borderRadius: BorderRadius
+                                                    .circular(50)
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                count
+                                                    .toString().padLeft(2, "0"),
+                                                style: GoogleFonts.sofiaSans(
+                                                  color: textColor,
+                                                  fontSize: 11,
+                                                  fontWeight: FontWeight.bold,
+                                                ),),
+                                            ),
+
+                                          ),
+                                        );
+                                      }
+                                    }
+                                    return Container();
+                                  }
+                              ),
                             ],
                           ),
                         ),
@@ -459,67 +537,62 @@ class _HomePageState extends State<HomePage> {
                     Row(
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(
-                              top: height / 50.26, left: width / 24),
+                          padding: EdgeInsets.only(left: width / 24),
                           child: InkWell(
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => Blogs()));
+                                  builder: (context) => Blogs(userphone: userphone,)));
                             },
                             child: Stack(
                               children: [
                                 Container(
-                                  height: height / 5.8,
-                                  width: width / 2.25,
-                                  decoration: const BoxDecoration(
-                                    image: DecorationImage(
-                                      image: AssetImage('assets/green.png'),
+                                    width: width / 2.25,
+                                    child: Image.asset(
+                                      'assets/green.png',
                                       fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                        top: height / 10.77, right: width / 18),
-                                    child: Column(
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              EdgeInsets.only(right: width / 8),
-                                          child: KText(text:
-                                            "Blogs",
-                                            style: GoogleFonts.sofiaSans(
-                                              color: textColor,
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                        KText(text:
-                                          "18 Blogs Available",
+                                    )),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      top: height / 10.77, left: width / 36),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding:
+                                        EdgeInsets.only(right: width / 12),
+                                        child: KText(text:
+                                        "Blogs",
                                           style: GoogleFonts.sofiaSans(
                                             color: textColor,
-                                            fontSize: 12,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                      KText(text:
+                                      "18 Blogs available",
+                                        style: GoogleFonts.sofiaSans(
+                                          color: textColor,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(
                                       left: width / 3.13, top: height / 10.77),
                                   child: Container(
-                                    height: height / 25.13,
-                                    width: width / 12,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: textColor,
-                                    ),
-                                    child: Icon(
-                                      Icons.arrow_forward_ios,
-                                      size: 15,
-                                    ),
-                                  ),
+                                      height: height / 25.13,
+                                      width: width / 12,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: textColor,
+                                      ),
+                                      child: Icon(
+                                        Icons.arrow_forward_ios,
+                                        size: 15,
+                                      )),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(
@@ -529,6 +602,239 @@ class _HomePageState extends State<HomePage> {
                                     child: Image.asset("assets/blog.png"),
                                   ),
                                 ),
+                                StreamBuilder(
+                                    stream: FirebaseFirestore.instance.collection("Blogs").snapshots(),
+                                    builder: (context, snapshot) {
+                                      if(snapshot.hasData) {
+                                        int count = snapshot.data!.docs.where((doc) {
+                                          List<dynamic> array = doc['views'];
+                                          return !array.contains(userphone);
+                                        }).length;
+                                        if(count!=0) {
+                                          return Padding(
+                                            padding: EdgeInsets.only(
+                                                left: width / 9,
+                                                top: height / 45.4),
+                                            child: Container(
+                                              width: 22,
+                                              height: 22,
+                                              decoration: BoxDecoration(
+                                                  color: Colors.red,
+                                                  borderRadius: BorderRadius
+                                                      .circular(50)
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                  count
+                                                      .toString().padLeft(2, "0"),
+                                                  style: GoogleFonts.sofiaSans(
+                                                    color: textColor,
+                                                    fontSize: 11,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),),
+                                              ),
+
+                                            ),
+                                          );
+                                        }
+                                      }
+                                      return Container();
+                                    }
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(
+                          width: width / 36,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => Podcasts()));
+                          },
+                          child: Stack(
+                            children: [
+                              Container(
+                                  width: width / 2.25,
+                                  child: Image.asset(
+                                    'assets/blue.png',
+                                    fit: BoxFit.contain,
+                                  )),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    top: height / 10.77, left: width / 36),
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding:
+                                      EdgeInsets.only(right: width / 9),
+                                      child: KText(text:
+                                      "Podcasts",
+                                        style: GoogleFonts.sofiaSans(
+                                          color: textColor,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    KText(text:
+                                    "Audio & Video Podcasts",
+                                      style: GoogleFonts.sofiaSans(
+                                        color: textColor,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    left: width / 3.13, top: height / 10.77),
+                                child: Container(
+                                  height: height / 25.13,
+                                  width: width / 12,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: textColor,
+                                  ),
+                                  child: Icon(
+                                    Icons.arrow_forward_ios,
+                                    size: 15,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    left: width / 72, top: height / 75.4),
+                                child: Container(
+                                  width: width / 6,
+                                  child: Image.asset("assets/podcast.png"),
+                                ),
+                              ),
+                             /* StreamBuilder(
+                                  stream: FirebaseFirestore.instance.collection("Notices").snapshots(),
+                                  builder: (context, snapshot) {
+                                    if(snapshot.hasData) {
+                                      int count = snapshot.data!.docs.where((doc) {
+                                        List<dynamic> array = doc['views'];
+                                        return !array.contains(userphone);
+                                      }).length;
+                                      if(count!=0) {
+                                        return Padding(
+                                          padding: EdgeInsets.only(
+                                              left: width / 9,
+                                              top: height / 45.4),
+                                          child: Container(
+                                            width: 22,
+                                            height: 22,
+                                            decoration: BoxDecoration(
+                                                color: Colors.red,
+                                                borderRadius: BorderRadius
+                                                    .circular(50)
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                count
+                                                    .toString().padLeft(2, "0"),
+                                                style: GoogleFonts.sofiaSans(
+                                                  color: textColor,
+                                                  fontSize: 11,
+                                                  fontWeight: FontWeight.bold,
+                                                ),),
+                                            ),
+
+                                          ),
+                                        );
+                                      }
+                                    }
+                                    return Container();
+                                  }
+                              ),*/
+                            ],
+                          ),
+                        ),
+
+                      ],
+                    ),
+                    Row(
+                      children: [
+
+                        Padding(
+                          padding: EdgeInsets.only(left: width / 24),
+                          child: InkWell(
+                            onTap: () {
+                             /* Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => Notices()));*/
+                            },
+                            child: Stack(
+                              children: [
+                                Container(
+                                    width: width / 2.25,
+                                    child: Image.asset(
+                                      'assets/pink_square.png',
+                                      fit: BoxFit.contain,
+                                    )),
+                                Padding(
+                                  padding: EdgeInsets.only(top: height/75.4, left: width/72),
+                                  child: Container(
+                                    width: width/5.14,
+                                    child: Image.asset("assets/star.png"),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      top: height / 10.77, left: width / 36),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding:
+                                        EdgeInsets.only(right: width / 12),
+                                        child: KText(text:
+                                        "Testimonials",
+                                          style: GoogleFonts.sofiaSans(
+                                            color: textColor,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      KText(text:
+                                      "76 testimonials",
+                                        style: GoogleFonts.sofiaSans(
+                                          color: textColor,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: width / 3.13, top: height / 10.77),
+                                  child: Container(
+                                      height: height / 25.13,
+                                      width: width / 12,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: textColor,
+                                      ),
+                                      child: Icon(
+                                        Icons.arrow_forward_ios,
+                                        size: 15,
+                                      )),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: width / 72, top: height / 75.4),
+                                  child: Container(
+                                    width: width / 6,
+                                    child: Image.asset("assets/music.png"),
+                                  ),
+                                ),
+
                               ],
                             ),
                           ),
@@ -536,81 +842,74 @@ class _HomePageState extends State<HomePage> {
                         SizedBox(
                           width: width / 36,
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(top: height / 50.26),
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => Podcasts()));
-                            },
-                            child: Stack(
-                              children: [
-                                Container(
-                                  height: height / 5.8,
+                       /* InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => EventsScreen()));
+                          },
+                          child: Stack(
+                            children: [
+                              Container(
                                   width: width / 2.25,
-                                  decoration: const BoxDecoration(
-                                    image: DecorationImage(
-                                      image: AssetImage('assets/blue.png'),
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                        top: height / 10.77,
-                                        right: width / 14.4),
-                                    child: Column(
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              right: width / 18),
-                                          child: KText(text:
-                                            "Podcasts",
-                                            style: GoogleFonts.sofiaSans(
-                                              color: textColor,
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
+                                  child: Image.asset(
+                                    'assets/blue.png',
+                                    fit: BoxFit.contain,
+                                  )),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    top: height / 10.77, left: width / 36),
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding:
+                                      EdgeInsets.only(right: width / 9),
+                                      child: KText(text:
+                                      "Podcasts",
+                                        style: GoogleFonts.sofiaSans(
+                                          color: textColor,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
                                         ),
-                                        KText(text:
-                                          "26 Audios & Videos",
-                                          style: GoogleFonts.sofiaSans(
-                                            color: textColor,
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                      ],
+                                      ),
                                     ),
+                                    KText(text:
+                                    "Audio & Video Podcasts",
+                                      style: GoogleFonts.sofiaSans(
+                                        color: textColor,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    left: width / 3.13, top: height / 10.77),
+                                child: Container(
+                                  height: height / 25.13,
+                                  width: width / 12,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: textColor,
+                                  ),
+                                  child: Icon(
+                                    Icons.arrow_forward_ios,
+                                    size: 15,
                                   ),
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      left: width / 3, top: height / 10.77),
-                                  child: Container(
-                                    height: height / 25.13,
-                                    width: width / 12,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: textColor,
-                                    ),
-                                    child: Icon(
-                                      Icons.arrow_forward_ios,
-                                      size: 15,
-                                    ),
-                                  ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    left: width / 72, top: height / 75.4),
+                                child: Container(
+                                  width: width / 6,
+                                  child: Image.asset("assets/podcast.png"),
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      left: width / 45, top: height / 75.4),
-                                  child: Container(
-                                    width: width / 6,
-                                    child: Image.asset("assets/podcast.png"),
-                                  ),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        ),
+                        ),*/
+
                       ],
                     ),
                     SizedBox(

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_church_management/Views/otp_page.dart';
 import 'package:flutter_church_management/Views/register_screen.dart';
@@ -27,7 +28,7 @@ class _OtpPageState extends State<OtpPage> {
   void initState() {
     super.initState();
     // getUserLocation();
-    // gettoken();
+    gettoken();
     _verifyphone();
   }
   var _verificationCode;
@@ -44,7 +45,7 @@ class _OtpPageState extends State<OtpPage> {
                   FirebaseFirestore.instance.collection('Users').doc(
                       document.docs[i].id).update({
                     "id": value.user!.uid,
-                    "fcmToken": ""
+                    "fcmToken": fcmToken
                   });
                   setState(() {
                     //userId = document.docs[i].id;
@@ -77,7 +78,11 @@ class _OtpPageState extends State<OtpPage> {
         },
         timeout: Duration(seconds: 120));
   }
-
+  String fcmToken="";
+  gettoken() async {
+    String? fcmTokenk = await FirebaseMessaging.instance.getToken();
+    fcmToken=fcmTokenk!;
+  }
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -183,7 +188,7 @@ class _OtpPageState extends State<OtpPage> {
                               if (document.docs[i]['phone'] == widget.phone) {
                                 FirebaseFirestore.instance.collection('Users').doc(document.docs[i].id).update({
                                   "id": value.user!.uid,
-                                  "fcmToken" : ""
+                                  "fcmToken": fcmToken
                                 });
                                 setState(() {
                                   //userId = document.docs[i].id;

@@ -429,7 +429,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       subtitle: Padding(
                         padding:  EdgeInsets.only(left: width/36),
-                        child: Text("Your family details here",
+                        child: Text("Your order details here",
                             style: GoogleFonts.sofiaSans(
                                 fontSize: 12,
                                 color: textColor.withOpacity(.6),
@@ -501,7 +501,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       title: Padding(
                         padding:  EdgeInsets.only(left: width/36),
                         child: Text(
-                          "Testimonials",
+                          "My Testimonials",
                           style: GoogleFonts.sofiaSans(
                               fontSize: 16,
                               color: textColor,
